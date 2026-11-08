@@ -22,9 +22,10 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 #intro{position:fixed;inset:0;z-index:50;background:radial-gradient(60% 50% at 50% 55%,#173824,var(--bg));transition:opacity .9s,transform .9s}
 #intro.out{opacity:0;transform:scale(1.08);pointer-events:none}
 #intro canvas{position:absolute;inset:0;width:100%;height:100%}
-#mark{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;border-radius:50%;object-fit:cover;opacity:0;transform:scale(.6);transition:opacity 1s,transform 1.2s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 60px rgba(226,180,92,.55)}
-#intro.show #mark{opacity:1;transform:scale(1)}
-#word{position:absolute;left:0;right:0;top:calc(50% + 100px);text-align:center;font:600 26px Georgia,"Iowan Old Style",serif;letter-spacing:.14em;opacity:0;transition:opacity 1s .4s}
+#slab{position:absolute;left:50%;top:50%;width:170px;height:220px;margin:-110px 0 0 -85px;border-radius:26px;display:grid;place-items:center;background:linear-gradient(140deg,rgba(255,255,255,.38),rgba(190,150,255,.2) 40%,rgba(255,150,170,.25) 70%,rgba(255,220,150,.32));border:1px solid rgba(255,255,255,.45);box-shadow:0 0 80px rgba(226,180,92,.5),inset 0 0 30px rgba(255,255,255,.25);opacity:0;transform:perspective(700px) translateY(60vh) rotateX(70deg) rotateZ(-8deg);transition:opacity .6s,transform 1.4s cubic-bezier(.2,.8,.2,1)}
+#intro.show #slab{opacity:1;transform:perspective(700px) translateY(0) rotateX(0) rotateZ(0)}
+#mark{width:104px;height:104px;border-radius:50%;object-fit:cover;box-shadow:0 0 40px rgba(226,180,92,.6)}
+#word{position:absolute;left:0;right:0;top:calc(50% + 140px);text-align:center;font:600 26px Georgia,"Iowan Old Style",serif;letter-spacing:.14em;opacity:0;transition:opacity 1s .4s}
 #intro.show #word{opacity:1}
 #skip{position:absolute;right:16px;top:calc(env(safe-area-inset-top) + 14px);color:var(--mist);opacity:.7;padding:8px 12px}
 
@@ -54,6 +55,19 @@ nav button{padding:12px 22px;border-radius:16px;color:var(--mist)}
 nav button[aria-selected=true]{background:var(--deep);color:var(--gold);border:1px solid var(--line)}
 section[hidden]{display:none}
 
+/* video-style glass, 3D deck, ambient particles */
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main{position:relative;z-index:1}nav{z-index:3}
+.glass{position:relative;overflow:hidden;background:linear-gradient(140deg,rgba(255,255,255,.15),rgba(180,140,255,.07) 45%,rgba(255,150,170,.09) 70%,rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 30px 60px -30px #000}
+.glass::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.2) 48%,transparent 62%);transform:translateX(var(--sx,-120%))}
+#deck{position:relative;display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:22px -18px 0;padding:10px 18px 24px;perspective:900px;scrollbar-width:none}
+#deck::-webkit-scrollbar{display:none}
+.slab{flex:0 0 80%;scroll-snap-align:center;min-height:340px;padding:22px;border-radius:28px;will-change:transform}
+.slab h2{font:600 20px Georgia,serif;margin-bottom:14px}
+.slab #qrbtn{margin:26px 0 0}
+#pager{display:flex;justify-content:center;gap:8px}
+#pager i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .3s}
+#pager i.on{width:22px;border-radius:4px;background:var(--gold)}
 /* qr modal */
 #modal{position:fixed;inset:0;z-index:40;background:rgba(5,12,8,.78);display:none;place-items:center;padding:20px}
 #modal.open{display:grid}
@@ -65,13 +79,14 @@ section[hidden]{display:none}
 .timer i{display:block;height:100%;width:100%;background:var(--gold);transform-origin:left}
 .close{margin-top:10px;padding:12px 26px;border-radius:14px;border:1px solid var(--line);color:var(--mist)}
 .demo{position:fixed;top:calc(env(safe-area-inset-top) + 6px);left:50%;transform:translateX(-50%);font-size:11px;color:var(--mist);opacity:.45;z-index:5}
-@media (prefers-reduced-motion:reduce){#intro,#mark,#word{transition:none}.sheet{animation:none}}
+@media (prefers-reduced-motion:reduce){#intro,#slab,#word{transition:none}.sheet{animation:none}}
 </style>
 </head>
 <body>
+<canvas id="bg"></canvas>
 <div id="intro" role="presentation">
   <canvas id="c"></canvas>
-  <img id="mark" src="assets/par-ordo-logo.png" alt="ПАР ОРДО" onerror="this.style.display='none'">
+  <div id="slab"><img id="mark" src="assets/par-ordo-logo.png" alt="ПАР ОРДО" onerror="this.style.display='none'"></div>
   <div id="word">ПАР ОРДО GO</div>
   <button id="skip">Пропустить</button>
 </div>
@@ -81,18 +96,12 @@ section[hidden]{display:none}
   <section id="home">
     <p class="sub">Добро пожаловать</p>
     <h1 id="hello">Айбек Н.</h1>
-    <button id="qrbtn"><b>Показать QR</b><span>Покажите администратору при входе</span></button>
-
-    <div class="card glass">
-      <h2>Бонус: 5-й вход бесплатно</h2>
-      <div class="dots" id="dots"></div>
-      <p class="note" id="bnote"></p>
+    <div id="deck">
+      <article class="slab glass"><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Обновляется каждые 60 секунд</span></button></article>
+      <article class="slab glass"><h2>Бонус: 5-й вход бесплатно</h2><div class="dots" id="dots"></div><p class="note" id="bnote"></p></article>
+      <article class="slab glass"><h2>Последние посещения</h2><div id="last"></div></article>
     </div>
-
-    <div class="card glass">
-      <h2>Последние посещения</h2>
-      <div id="last"></div>
-    </div>
+    <div id="pager"><i class="on"></i><i></i><i></i></div>
   </section>
 
   <section id="visits" hidden>
@@ -160,7 +169,7 @@ const $=s=>document.querySelector(s), money=n=>n.toLocaleString('ru-RU')+' со�
     }
     g.globalCompositeOperation='source-over';
     if(t>1.9)intro.classList.add('show');
-    if(t>3.6)end();else requestAnimationFrame(frame);
+    if(t>4.3)end();else requestAnimationFrame(frame);
   })(t0);
 })();
 
@@ -198,6 +207,30 @@ function closeQr(){$('#modal').classList.remove('open');clearInterval(qrTimer)}
 $('#qrbtn').onclick=openQr;$('#close').onclick=closeQr;
 $('#modal').onclick=e=>{if(e.target.id==='modal')closeQr()};
 addEventListener('keydown',e=>{if(e.key==='Escape')closeQr()});
+
+/* ===== 3D deck ===== */
+const deck=$('#deck'),slabs=[...deck.children],pg=[...document.querySelectorAll('#pager i')];
+function tilt(){const c=deck.scrollLeft+deck.clientWidth/2;let best=0,bd=1e9;
+  slabs.forEach((s,i)=>{const d=(s.offsetLeft+s.offsetWidth/2-c)/deck.clientWidth,a=Math.max(-1,Math.min(1,d));
+    s.style.transform=`translateZ(${-Math.abs(a)*120}px) rotateY(${-a*38}deg) scale(${1-Math.abs(a)*.06})`;
+    s.style.setProperty('--sx',(a*160-20)+'%');s.style.opacity=1-Math.abs(a)*.35;
+    if(Math.abs(d)<bd){bd=Math.abs(d);best=i}});
+  pg.forEach((p,i)=>p.classList.toggle('on',i===best))}
+deck.addEventListener('scroll',tilt,{passive:true});addEventListener('resize',tilt);tilt();
+
+/* ===== ambient particles ===== */
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const cv=$('#bg'),g=cv.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2);let W,H;
+  const fit=()=>{W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;g.setTransform(dpr,0,0,dpr,0,0)};fit();addEventListener('resize',fit);
+  const cols=['226,180,92','255,138,61','214,120,200','130,160,255'];
+  const P=Array.from({length:55},()=>({x:Math.random()*W,y:Math.random()*H,r:.8+Math.random()*2.2,v:.15+Math.random()*.5,c:cols[Math.random()*4|0],w:Math.random()*6}));
+  (function f(t){
+    if(!document.hidden){g.clearRect(0,0,W,H);g.globalCompositeOperation='lighter';
+      for(const p of P){p.y-=p.v;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
+        g.fillStyle=`rgba(${p.c},.55)`;g.beginPath();g.arc(p.x+Math.sin(t/1500+p.w)*14,p.y,p.r,0,6.283);g.fill()}}
+    requestAnimationFrame(f)})(0);
+})();
 
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
