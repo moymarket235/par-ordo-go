@@ -1,0 +1,12 @@
+{
+  "name": "ПАР ОРДО GO",
+  "short_name": "ПАР ОРДО GO",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1711",
+  "theme_color": "#0b1711",
+  "icons": [
+    { "src": "assets/par-ordo-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
