@@ -30,10 +30,9 @@
   const CSS = `
   .po-smart-invite{position:relative;isolation:isolate;overflow:hidden;margin:12px 0 16px;padding:14px 15px 11px;border-radius:19px;border:1px solid rgba(241,196,111,.48);background:radial-gradient(115% 125% at 100% 0%,rgba(235,163,69,.18),transparent 52%),linear-gradient(145deg,rgba(48,31,17,.91),rgba(12,11,9,.94) 70%);box-shadow:inset 0 1px 0 rgba(255,242,210,.13),0 12px 30px rgba(0,0,0,.28),0 0 22px rgba(226,169,83,.07);touch-action:pan-y;user-select:none;-webkit-user-select:none}
   .po-smart-invite:before{content:"";position:absolute;inset:5px;border:1px solid rgba(255,221,160,.10);border-radius:14px;pointer-events:none;z-index:-1}
-  .po-smart-invite-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .po-smart-invite-head{display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:9px}
   .po-smart-invite-label{display:flex;align-items:center;gap:7px;color:#f0cc87;font-size:9px;line-height:1.2;font-weight:900;letter-spacing:.15em}
   .po-smart-invite-label i{width:6px;height:6px;border-radius:50%;background:#f4c875;box-shadow:0 0 10px rgba(244,200,117,.8)}
-  .po-smart-invite-count{flex:0 0 auto;color:#c6a66c;font-size:10px;font-weight:800;letter-spacing:.09em;font-variant-numeric:tabular-nums}
   .po-smart-invite-copy{min-height:60px;display:flex;flex-direction:column;justify-content:center;transition:opacity .22s ease,transform .22s ease}
   .po-smart-invite-copy.is-changing{opacity:0;transform:translate3d(0,7px,0)}
   .po-smart-invite-copy h2{font:700 clamp(17px,4.8vw,21px)/1.18 Georgia,"Iowan Old Style",serif;letter-spacing:.005em;color:#fff0d0;text-shadow:0 2px 14px rgba(229,177,90,.16);text-wrap:balance}
@@ -66,7 +65,6 @@
     const apply = () => {
       $('#poSmartInviteTitle').textContent = item.title;
       $('#poSmartInviteText').textContent = item.text;
-      $('#poSmartInviteCount').textContent = `${String(index + 1).padStart(2, '0')} / ${String(INVITATIONS.length).padStart(2, '0')}`;
       if (copy && animate) copy.classList.remove('is-changing');
       restartProgress();
     };
@@ -115,7 +113,6 @@
     section.innerHTML = `
       <div class="po-smart-invite-head">
         <span class="po-smart-invite-label"><i></i> ПРИГЛАШЕНИЕ PAR ORDO</span>
-        <span id="poSmartInviteCount" class="po-smart-invite-count">01 / 15</span>
       </div>
       <div id="poSmartInviteCopy" class="po-smart-invite-copy" aria-live="polite" aria-atomic="true">
         <h2 id="poSmartInviteTitle"></h2><p id="poSmartInviteText"></p>
