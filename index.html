@@ -12,7 +12,6 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" as="image" href="assets/bg-banya.jpg">
 <link rel="apple-touch-icon" href="assets/par-ordo-logo.png">
-<link rel="stylesheet" href="./par-ordo-go-hybrid-sync-royal-v1.css?v=1">
 <style>
 :root{--bg:#0a0807;--deep:#1d130a;--gold:#f0b95a;--ember:#ff7a2e;--mist:#e8d9c0;--ink:#f6efe2;--line:rgba(240,185,90,.26);--logs:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='97'%3E%3Cg fill='%23ffb050' fill-opacity='.05' stroke='%23ffc27a' stroke-opacity='.2' stroke-width='1.2'%3E%3Ccircle cx='0' cy='0' r='25'/%3E%3Ccircle cx='0' cy='0' r='16'/%3E%3Ccircle cx='0' cy='0' r='7'/%3E%3Ccircle cx='56' cy='0' r='25'/%3E%3Ccircle cx='56' cy='0' r='16'/%3E%3Ccircle cx='56' cy='0' r='7'/%3E%3Ccircle cx='112' cy='0' r='25'/%3E%3Ccircle cx='112' cy='0' r='16'/%3E%3Ccircle cx='112' cy='0' r='7'/%3E%3Ccircle cx='0' cy='97' r='25'/%3E%3Ccircle cx='0' cy='97' r='16'/%3E%3Ccircle cx='0' cy='97' r='7'/%3E%3Ccircle cx='56' cy='97' r='25'/%3E%3Ccircle cx='56' cy='97' r='16'/%3E%3Ccircle cx='56' cy='97' r='7'/%3E%3Ccircle cx='112' cy='97' r='25'/%3E%3Ccircle cx='112' cy='97' r='16'/%3E%3Ccircle cx='112' cy='97' r='7'/%3E%3Ccircle cx='28' cy='48.5' r='25'/%3E%3Ccircle cx='28' cy='48.5' r='16'/%3E%3Ccircle cx='28' cy='48.5' r='7'/%3E%3Ccircle cx='84' cy='48.5' r='25'/%3E%3Ccircle cx='84' cy='48.5' r='16'/%3E%3Ccircle cx='84' cy='48.5' r='7'/%3E%3C/g%3E%3C/svg%3E")}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
@@ -251,10 +250,12 @@ body.noauth nav{display:none}
 <link rel="stylesheet" href="./par-ordo-go-icon-fix-v4.css?v=8">
 <link rel="stylesheet" href="./par-ordo-go-nav-clean-v5.css?v=8">
 <link rel="stylesheet" href="./par-ordo-go-nav-final-v8.css?v=8">
+<link rel="stylesheet" href="./par-ordo-go-cinema-v1.css?v=1">
 </head>
 <body>
 <div id="scene"></div>
-<canvas id="bg"></canvas>
+<div id="ribbons" aria-hidden="true"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
 <div id="intro" role="presentation">
   <canvas id="c"></canvas>
   <div id="flash"></div>
@@ -286,24 +287,26 @@ body.noauth nav{display:none}
   </section>
 
   <section id="home">
-    <div class="top"><img src="./assets/par-ordo-logo.webp" alt=""><b>ПАР ОРДО</b><span>GO</span><em class="chip">PREVIEW</em></div>
+    <div class="top"><img src="./assets/par-ordo-logo.webp" alt=""><b>ПАР ОРДО</b><span>GO</span></div>
     <p class="sub">Добро пожаловать</p>
     <h1 id="hello">Добро пожаловать</h1>
     <div class="card glass install-panel" id="installPanel">
       <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
       <p class="install-copy">Установите PAR ORDO GO на телефон для быстрого доступа. PWA можно установить из браузера. Android APK будет доступен после отдельной сборки.</p>
       <div class="install-actions">
-        <button type="button" class="install-action primary" id="installPwaBtn">Установить PWA</button>
-        <button type="button" class="install-action" id="apkBtn">APK · скоро</button>
+        <button type="button" class="install-action primary" id="installPwaBtn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Установить PWA</span></button>
+        <button type="button" class="install-action" id="apkBtn"><svg class="ic ic-android" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 9h12v9a1.5 1.5 0 0 1-1.5 1.500H15v2.500a1.250 1.250 0 0 1-2.500 0V19.500h-1V22A1.250 1.250 0 0 1 9 22v-2.500H7.500A1.500 1.500 0 0 1 6 18zM3.750 9A1.250 1.250 0 0 1 5 10.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 3.750 9m16.500 0a1.250 1.250 0 0 1 1.250 1.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 20.250 9M6 8a6 6 0 0 1 3.200-5.100l-.9-1.400.8-.5 1 1.500a6.300 6.300 0 0 1 3.800 0l1-1.500.8.5-.9 1.400A6 6 0 0 1 18 8zm3.400-3a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600m5.200 0a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600"/></svg><span>APK · скоро</span></button>
       </div>
       <p class="install-foot">Интерфейс адаптируется к частоте обновления экрана. Реальные 120 FPS зависят от дисплея и устройства.</p>
     </div>
-    <div id="deck">
-      <article class="slab glass"><div class="orb"><img src="./assets/par-ordo-logo.webp" alt="ПАР ОРДО" loading="eager" decoding="async"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
+    <div id="deckStage" class="deck-stage">
+    <div id="deck" role="group" aria-roledescription="карусель" aria-label="Карточки PAR ORDO" tabindex="0">
+      <article class="slab glass"><div class="orb"><img src="./assets/par-ordo-logo.webp" alt="ПАР ОРДО" loading="eager" decoding="async"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><svg class="ic ic-qr" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.500"/><rect x="14" y="3" width="7" height="7" rx="1.500"/><rect x="3" y="14" width="7" height="7" rx="1.500"/></g><path fill="currentColor" d="M5.500 5.500h2v2h-2zM16.500 5.500h2v2h-2zM5.500 16.500h2v2h-2zM13 13h3.500v3H13zM18 13h3v3h-3zM16 17h3v2h2v2h-5zM13 18h2v3h-2z"/></svg><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
       <article class="slab glass"><h2>Бонус: 5-й вход бесплатно</h2><div class="dots" id="dots"></div><p class="note" id="bnote"></p></article>
       <article class="slab glass"><h2>Последние посещения</h2><div id="last"></div><div class="total"><span class="sub">Потрачено всего</span><b id="tot2"></b></div></article>
     </div>
     <div id="pager"><i class="on"></i><i></i><i></i></div>
+    </div>
   </section>
 
   <section id="visits" hidden>
@@ -386,59 +389,6 @@ document.querySelectorAll('img[src*=' + JSON.stringify('par-ordo-logo.webp') + '
     if(orb)orb.classList.add('logo-missing');
   };
 });
-/* ===== intro ===== */
-(function(){
-  const intro=$('#intro');let done=false;
-  const ready=()=>document.body.classList.add('ready');
-  const end=()=>{if(done)return;done=true;intro.classList.add('out');ready();window.__poAmbientResume?.();setTimeout(()=>intro.remove(),1100)};
-  let seen=false;try{seen=sessionStorage.getItem('po_go_intro')==='1'}catch(e){}
-  if(seen||matchMedia('(prefers-reduced-motion:reduce)').matches){intro.remove();ready();return}
-  try{sessionStorage.setItem('po_go_intro','1')}catch(e){}
-  $('#skip').onclick=end;setTimeout(end,7000);
-  const cv=$('#c'),g=cv.getContext('2d',{alpha:true,desynchronized:true});
-  if(!g){end();return}
-  const cores=navigator.hardwareConcurrency||4;
-  const memory=navigator.deviceMemory||4;
-  const lowPower=cores<=4||memory<=4;
-  const dpr=Math.min(devicePixelRatio||1,lowPower?1:1.15);
-  let W,H;
-  const fit=()=>{W=innerWidth;H=innerHeight;cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));g.setTransform(dpr,0,0,dpr,0,0)};
-  fit();
-  const N=lowPower?120:170,R=150,P=[];
-  for(let i=0;i<N;i++)P.push({a:i/N*6.283,r0:Math.max(W,H)*(.45+Math.random()*.5),d:Math.random()*1.1,s:1+Math.random()*2.4,hot:Math.random()>.55,dir:Math.random()>.5?1:-1});
-  const ease=p=>1-Math.pow(1-p,3),t0=performance.now();let boom=false,resizeRaf=0;
-  addEventListener('resize',()=>{if(!resizeRaf)resizeRaf=requestAnimationFrame(()=>{resizeRaf=0;fit()})},{passive:true});
-  (function frame(now){
-    if(done||document.hidden)return;
-    const t=(now-t0)/1000,cx=W/2,cy=H/2;
-    g.clearRect(0,0,W,H);g.globalCompositeOperation='lighter';
-    const paths=Array.from({length:10},()=>new Path2D());
-    for(const p of P){
-      const k=ease(Math.min(1,Math.max(0,(t-p.d)/1.6)));
-      let r=p.r0+(R-p.r0)*k,a=p.a+t*.9+(1-k)*3.2*p.dir,al=.25+.7*k;
-      if(t>2.3){const burst=Math.min(1,(t-2.3)/1.4);r=R+burst*Math.max(W,H)*.6;al*=1-burst}
-      const bucket=Math.min(4,Math.max(0,Math.round(al*4)));
-      const path=paths[(p.hot?5:0)+bucket];
-      const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r,rad=p.s*(1+(1-k)*.6);
-      path.moveTo(x+rad,y);path.arc(x,y,rad,0,6.283);
-    }
-    for(let i=0;i<10;i++){
-      const bucket=i%5;if(!paths[i])continue;
-      g.globalAlpha=.25+bucket*.17;
-      g.fillStyle=i>=5?'#ff8a3d':'#e2b45c';g.fill(paths[i]);
-    }
-    g.globalAlpha=1;
-    if(t<2.6){g.strokeStyle=`rgba(255,200,120,${.18*Math.min(1,t/1.8)})`;g.lineWidth=10;g.beginPath();g.arc(cx,cy,R,0,6.283);g.stroke()}
-    if(t>2.3){
-      if(!boom){boom=true;$('#flash').classList.add('go');try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}}
-      const w=(t-2.3)*1.6;g.strokeStyle=`rgba(255,220,160,${Math.max(0,.8-w*.9)})`;g.lineWidth=3;g.beginPath();g.arc(cx,cy,R+w*Math.max(W,H)*.55,0,6.283);g.stroke();
-    }
-    g.globalCompositeOperation='source-over';g.globalAlpha=1;
-    if(t>1.9)intro.classList.add('show');
-    if(t>4.8)end();else requestAnimationFrame(frame);
-  })(t0);
-})();
-
 /* ===== home / visits: live data from PAR ORDO PRO Worker ===== */
 const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 const dots=$('#dots'),C=2*Math.PI*64;
@@ -525,69 +475,7 @@ $('#qrbtn').onclick=openQr;$('#close').onclick=closeQr;
 $('#modal').onclick=e=>{if(e.target.id==='modal')closeQr()};
 addEventListener('keydown',e=>{if(e.key==='Escape')closeQr()});
 
-/* ===== 3D deck ===== */
-const deck=$('#deck'),slabs=[...deck.children],pg=[...document.querySelectorAll('#pager i')];
-function tilt(){const c=deck.scrollLeft+deck.clientWidth/2;let best=0,bd=1e9;
-  slabs.forEach((s,i)=>{const d=(s.offsetLeft+s.offsetWidth/2-c)/deck.clientWidth,a=Math.max(-1,Math.min(1,d));
-    s.style.transform=`translateZ(${-Math.abs(a)*120}px) rotateY(${-a*38}deg) scale(${1-Math.abs(a)*.06})`;
-    s.style.setProperty('--sx',(a*160-20)+'%');s.style.opacity=1-Math.abs(a)*.35;
-    if(Math.abs(d)<bd){bd=Math.abs(d);best=i}});
-  pg.forEach((p,i)=>p.classList.toggle('on',i===best))}
-let tk=0;deck.addEventListener('scroll',()=>{if(!tk)tk=requestAnimationFrame(()=>{tk=0;tilt()})},{passive:true});addEventListener('resize',tilt);tilt();
-
-/* ===== ambient particles: low-cost adaptive renderer ===== */
-(function(){
-  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  if(reduce)return;
-  const cv=$('#bg'),g=cv.getContext('2d',{alpha:true,desynchronized:true});
-  if(!g)return;
-  const cores=navigator.hardwareConcurrency||4;
-  const memory=navigator.deviceMemory||4;
-  const lowPower=cores<=6||memory<=4;
-  const maxDpr=lowPower?1:1.1;
-  const frameInterval=lowPower?1000/30:1000/40;
-  let W=0,H=0,dpr=1,raf=0,last=0;
-  const colors=['240,185,90','255,122,46','255,160,80','255,210,150'];
-  const maxParticles=lowPower?10:18;
-  let particles=[];
-  const smoke=document.createElement('canvas');smoke.width=96;smoke.height=96;
-  const sg=smoke.getContext('2d');
-  if(sg){const grad=sg.createRadialGradient(48,48,0,48,48,48);grad.addColorStop(0,'rgba(255,235,210,.07)');grad.addColorStop(1,'rgba(255,235,210,0)');sg.fillStyle=grad;sg.fillRect(0,0,96,96)}
-  const glows=Array.from({length:lowPower?2:3},()=>({x:Math.random(),y:.4+Math.random()*.6,r:.14+Math.random()*.16,v:.035+Math.random()*.025,w:Math.random()*6}));
-  function fit(){
-    dpr=Math.min(devicePixelRatio||1,maxDpr);W=innerWidth;H=innerHeight;
-    cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
-    cv.style.width=W+'px';cv.style.height=H+'px';g.setTransform(dpr,0,0,dpr,0,0);
-    particles=Array.from({length:maxParticles},()=>({x:Math.random()*W,y:Math.random()*H,r:.7+Math.random()*1.7,v:.12+Math.random()*.35,c:Math.random()*4|0,w:Math.random()*6}));
-  }
-  fit();
-  let resizeRaf=0;
-  addEventListener('resize',()=>{if(!resizeRaf)resizeRaf=requestAnimationFrame(()=>{resizeRaf=0;fit()})},{passive:true});
-  function stop(){if(raf){cancelAnimationFrame(raf);raf=0}last=0;g.clearRect(0,0,W,H)}
-  function start(){const intro=document.getElementById('intro');if(!raf&&!document.hidden&&!document.body.classList.contains('qr')&&(!intro||intro.classList.contains('out')))raf=requestAnimationFrame(draw)}
-  function draw(t){
-    raf=0;
-    if(document.hidden||document.body.classList.contains('qr')){last=0;return}
-    if(last&&t-last<frameInterval){raf=requestAnimationFrame(draw);return}
-    const dt=last?Math.min((t-last)/16.6667,3):1;last=t;
-    g.clearRect(0,0,W,H);
-    g.globalCompositeOperation='lighter';
-    for(const q of glows){q.y-=q.v*dt/H;if(q.y<-.2)q.y=1.05;const x=q.x*W+Math.sin(t/4500+q.w)*W*.045,y=q.y*H,r=q.r*Math.max(W,H);g.globalAlpha=1;g.drawImage(smoke,x-r,y-r,r*2,r*2)}
-    g.globalCompositeOperation='source-over';
-    const paths=[new Path2D(),new Path2D(),new Path2D(),new Path2D()];
-    for(let i=0;i<maxParticles;i++){
-      const p=particles[i];p.y-=p.v*dt;
-      if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
-      const x=p.x+Math.sin(t/1800+p.w)*11;
-      paths[p.c].moveTo(x+p.r,p.y);paths[p.c].arc(x,p.y,p.r,0,6.283);
-    }
-    for(let i=0;i<4;i++){g.fillStyle=`rgba(${colors[i]},.5)`;g.fill(paths[i])}
-    g.globalAlpha=1;raf=requestAnimationFrame(draw);
-  }
-  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
-  window.__poAmbientPause=stop;window.__poAmbientResume=start;
-  start();
-})();
+const tilt=()=>window.__poDeckRefresh?.();
 
 /* ===== registration ===== */
 const API_URL='https://par-ordo-api.moimarketjibekjolu.workers.dev';
@@ -717,6 +605,6 @@ window.addEventListener('appinstalled',()=>toast('PAR ORDO GO установле
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 <script src="./smart-invitation-v1.js?v=2"></script>
-<script src="./par-ordo-go-hybrid-sync-royal-v1.js?v=1"></script>
+<script src="./par-ordo-go-cinema-v1.js?v=1"></script>
 </body>
 </html>

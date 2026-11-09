@@ -1,5 +1,5 @@
-const CACHE='po-go-v16';
-const SHELL=['./','./index.html','./manifest.webmanifest','./assets/par-ordo-logo.png','./assets/par-ordo-logo.webp','./assets/bg-banya.jpg'];
+const CACHE='po-go-v17';
+const SHELL=['./','./index.html','./manifest.webmanifest','./assets/par-ordo-logo.png','./assets/par-ordo-logo.webp','./assets/bg-banya.jpg','./assets/ornament-corner.svg','./assets/ribbons.svg','./par-ordo-go-cinema-v1.css','./par-ordo-go-cinema-v1.js'];
 async function cacheOk(cache,request,response){
   if(response && response.ok && response.type!=='opaque'){
     try{await cache.put(request,response.clone())}catch(_){ }

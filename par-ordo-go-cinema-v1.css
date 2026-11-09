@@ -1,0 +1,188 @@
+/* PAR ORDO GO — CINEMA V1
+   The final visual layer: gold-glass look and motion. Load last in <head>.
+   Visual only — QR, account, visits, API and push logic are untouched. */
+
+:root{
+  --c-gold:#f6c878;
+  --c-gold-hi:#ffe2a8;
+  --c-ember:#ff8a3a;
+  --c-edge:rgba(255,205,130,.72);
+  --c-serif:Georgia,"Noto Serif","Iowan Old Style","Times New Roman",serif;
+  --c-card:linear-gradient(160deg,rgba(38,26,15,.80),rgba(9,8,8,.86) 62%,rgba(16,10,6,.88));
+  --c-glow:0 0 0 1px rgba(255,190,105,.10),0 0 20px rgba(255,165,70,.34),0 18px 40px -22px #000;
+  --slab-h:clamp(288px,calc(100svh - 520px - env(safe-area-inset-top)),392px);
+}
+
+/* ---------- Scene ---------- */
+#scene{inset:-3%;transform:translate3d(var(--scene-x,0),0,0) scale(1.02);will-change:transform}
+#scene::after{content:"";position:absolute;left:62%;top:3%;width:38%;height:17%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,170,70,.42),transparent);animation:cSign 3.4s ease-in-out infinite alternate;will-change:opacity}
+@keyframes cSign{from{opacity:.15}to{opacity:.85}}
+body::before{background:
+  radial-gradient(120% 42% at 50% 60%,rgba(0,0,0,.62),transparent 78%),
+  linear-gradient(180deg,rgba(6,5,4,.58),rgba(6,5,4,.14) 22%,rgba(6,5,4,.52) 44%,rgba(5,4,4,.74) 80%,rgba(5,4,4,.5) 100%)!important}
+#bg{z-index:20!important}
+#ribbons{position:fixed;left:-6%;right:-6%;bottom:42px;height:150px;z-index:0;pointer-events:none;opacity:.9;
+  background:url(assets/ribbons.svg) center/100% 100% no-repeat;animation:cRibbon 11s ease-in-out infinite alternate}
+@keyframes cRibbon{from{transform:translate3d(-2.5%,3px,0)}to{transform:translate3d(2.5%,-5px,0)}}
+main{padding-top:calc(14px + env(safe-area-inset-top))!important}
+body{padding-top:0!important}
+html body main{padding-bottom:calc(80px + env(safe-area-inset-bottom))!important}
+html body.noauth nav[role="tablist"]{display:none!important}
+
+/* ---------- Header ---------- */
+.top{gap:12px;margin-bottom:5px;position:relative}
+.top img{width:58px;height:58px;box-shadow:0 0 0 1.5px rgba(255,205,130,.55),0 0 20px rgba(255,150,60,.6)}
+.top b{font:700 22px var(--c-serif);letter-spacing:.13em;color:#fbeeda}
+.top span{padding:4px 11px;border-radius:12px;font:800 14px system-ui,sans-serif;background:linear-gradient(135deg,#ffd68e,#ff9a40);box-shadow:0 0 14px rgba(255,160,70,.55)}
+#home .top::after{content:"";position:absolute;left:70px;top:48px;width:118px;height:9px;
+  background:
+   linear-gradient(90deg,transparent,var(--c-gold) 90%) left center/44% 1px no-repeat,
+   linear-gradient(90deg,var(--c-gold) 10%,transparent) right center/44% 1px no-repeat,
+   radial-gradient(circle,var(--c-gold-hi) 0 2.2px,transparent 2.8px) center/9px 9px no-repeat}
+#home .sub{font-size:14px;opacity:.86}
+#hello{font-size:clamp(26px,7.6vw,31px);margin:0 0 8px;color:#fff4e2}
+
+/* ---------- Glass surfaces ---------- */
+#poSmartInvite.po-smart-invite,
+#installPanel.install-panel,
+.glass.card,.glass.formcard,.glass.sheet{
+  background:var(--c-card)!important;
+  border:1px solid var(--c-edge)!important;
+  box-shadow:var(--c-glow),inset 0 1px 0 rgba(255,240,210,.22)!important;
+  will-change:transform}
+#installPanel.install-panel{border-color:rgba(255,205,130,.34)!important;box-shadow:0 14px 30px -20px #000,inset 0 1px 0 rgba(255,240,210,.14)!important;border-radius:22px;padding:10px 15px 12px!important;margin:9px 0 6px!important;gap:7px!important}
+#poSmartInvite.po-smart-invite{margin:0;padding:11px 17px 8px;border-radius:24px}
+#poSmartInvite .po-smart-invite-head{margin-bottom:5px}
+#poSmartInvite .po-smart-invite-bottom{margin-top:6px}
+#poSmartInvite .po-smart-invite-hint{margin-top:3px}
+#poSmartInvite::before{inset:4px;border-color:rgba(255,221,160,.12);border-radius:20px}
+#poSmartInvite::after,.slab .orn{content:"";position:absolute;pointer-events:none;background:url(assets/ornament-corner.svg) center/contain no-repeat}
+#poSmartInvite::after{right:-20px;top:-30px;width:96px;height:96px;opacity:.24;-webkit-mask-image:radial-gradient(circle at 75% 25%,#000 28%,transparent 72%);mask-image:radial-gradient(circle at 75% 25%,#000 28%,transparent 72%)}
+.po-smart-invite-label{font-size:10px!important;letter-spacing:.14em!important}
+#poSmartInvite .po-smart-invite-copy{height:62px;min-height:0;transition:opacity .17s ease,transform .17s ease,text-shadow .17s ease}
+#poSmartInvite .po-smart-invite-copy.is-changing{opacity:0;transform:translate3d(-16px,0,0) skewX(-7deg);text-shadow:7px 0 rgba(255,60,90,.65),-7px 0 rgba(70,220,255,.55)}
+#poSmartInvite .po-smart-invite-copy h2{font-size:clamp(18px,5.1vw,20px);line-height:1.12;color:#fff4e0}
+#poSmartInvite .po-smart-invite-copy p{font-size:12.5px;line-height:1.25;margin-top:3px;color:#dccdb2}
+#poSmartInvite .po-smart-invite-progress i{background:linear-gradient(90deg,#ffdf9f,#ff9a40);box-shadow:0 0 8px rgba(255,180,90,.8)}
+#poSmartInvite .po-smart-invite-controls{gap:10px}
+#poSmartInvite .po-smart-invite-controls button{width:28px;height:28px;border-color:rgba(255,205,130,.75);color:var(--c-gold-hi);transition:transform .25s cubic-bezier(.2,1.6,.4,1),background .2s}
+#poSmartInvite .po-smart-invite-controls button:active{transform:scale(.82)}
+.po-smart-invite-hint{font-size:10.5px!important}
+
+/* Finger-following highlight on every glass surface */
+.glass::after{transform:none!important;opacity:var(--spec,0);transition:opacity .35s ease;
+  background:radial-gradient(70% 62% at var(--mx,50%) var(--my,0%),rgba(255,236,196,.26),transparent 72%)!important}
+.c-press{transition:transform .5s cubic-bezier(.2,1.5,.35,1)}
+.c-press.is-down{transition:transform .08s linear;--spec:1}
+
+/* ---------- Install ---------- */
+.install-head h2{font-size:16px!important;font-weight:600!important}
+.install-tag{font-size:10px!important;padding:4px 8px!important;border-color:rgba(255,205,130,.55)!important;border-radius:10px!important}
+#installPanel .install-actions{grid-template-columns:minmax(0,1.14fr) minmax(0,1fr)!important;gap:10px!important}
+#installPanel .install-action{display:flex;align-items:center;justify-content:center;gap:8px;min-height:37px!important;font-size:13px!important;font-weight:650;border-radius:15px!important;border-color:rgba(255,205,130,.6);background:rgba(8,6,5,.55);color:#fff0d8}
+#installPanel .install-action.primary{background:linear-gradient(95deg,#ffd390,#ffa650 60%,#ff8a3a);color:#1a1206;box-shadow:0 0 18px rgba(255,150,60,.45)}
+.ic{width:20px;height:20px;flex:none}
+.ic-android{color:#f6c878}
+button{transition:transform .3s cubic-bezier(.2,1.6,.4,1)}
+button:active{transform:scale(.96)}
+
+/* ---------- 3D deck ---------- */
+.deck-stage{position:relative;margin:0 -18px 0;padding:0;overflow:hidden;overflow:clip;overflow-clip-margin:0}
+#deck{display:block!important;position:relative;height:calc(var(--slab-h) + 26px);margin:0!important;padding:0!important;overflow:visible!important;
+  perspective:1000px;perspective-origin:50% 50%;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;outline-offset:-6px}
+#deck.is-dragging{cursor:grabbing}
+#deck .slab.glass{position:absolute;left:50%;top:9px;width:68.6%;max-width:330px;height:var(--slab-h);min-height:0!important;
+  margin:0;padding:17px 17px 16px;border-radius:30px;flex:none;
+  transform:translate3d(-50%,0,0);transform-origin:50% 50%;backface-visibility:hidden;
+  animation:none!important;will-change:transform,opacity;
+  background:radial-gradient(90% 34% at 50% 104%,rgba(255,140,50,.34),transparent 74%),linear-gradient(165deg,rgba(40,27,16,.74),rgba(8,8,9,.80) 58%,rgba(10,8,8,.84))!important;
+  border:1.5px solid rgba(255,212,145,.86)!important;
+  box-shadow:0 0 22px rgba(255,170,70,.42),0 26px 50px -26px #000,inset 0 1px 0 rgba(255,244,218,.32),inset 0 0 26px rgba(255,170,80,.08)!important}
+#deck .slab::before{display:none}
+.slab .orn{left:-20px;top:-22px;width:124px;height:124px;opacity:.34;-webkit-mask-image:radial-gradient(circle at 25% 25%,#000 30%,transparent 72%);mask-image:radial-gradient(circle at 25% 25%,#000 30%,transparent 72%)}
+.slab .orn+*{position:relative}
+#deck .slab>*:not(.orn):not(.smear){opacity:var(--dim,1);position:relative;z-index:1}
+#deck .slab:not(.active)>*{pointer-events:none}
+#deck .slab h2{font:700 clamp(21px,6vw,24px)/1.2 var(--c-serif);color:#fff2dc;margin-bottom:7px;
+  text-shadow:calc(var(--split,0)*1px) 0 rgba(255,60,90,.75),calc(var(--split,0)*-1px) 0 rgba(70,220,255,.65)}
+#deck .slab .note{font-size:13.5px;line-height:1.34;margin-bottom:10px;
+  text-shadow:calc(var(--split,0)*1px) 0 rgba(255,60,90,.55),calc(var(--split,0)*-1px) 0 rgba(70,220,255,.5)}
+
+/* speed smear: mosaic bars that appear only while a card is moving fast */
+.smear{position:absolute;inset:-1px;z-index:2;pointer-events:none;border-radius:inherit;opacity:var(--smear,0);
+  background:
+   repeating-linear-gradient(180deg,rgba(255,190,90,.20) 0 7px,transparent 7px 15px,rgba(255,80,120,.13) 15px 19px,transparent 19px 31px,rgba(90,220,255,.12) 31px 35px,transparent 35px 44px);
+  transform:translate3d(calc(var(--split,0)*3px),0,0) scaleX(1.06)}
+
+.orb{width:clamp(102px,14.6svh,124px)!important;height:clamp(102px,14.6svh,124px)!important;margin:2px auto 7px!important;padding:3.5px!important;flex:none;
+  background:conic-gradient(from 0deg,#ffcf86,#ff9a3e,#ffe0a4,#e8a3d8 12%,#ffcf86 22%,#ff8f38 60%,#ffe0a4)!important;
+  box-shadow:0 0 0 5px rgba(12,8,5,.72),0 0 0 6.5px rgba(255,205,130,.55),0 0 32px 8px rgba(255,150,60,.55)!important}
+
+#qrbtn{display:grid!important;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;
+  margin:auto 0 0!important;padding:9px 18px!important;min-height:58px;border-radius:24px!important;position:relative;overflow:hidden;isolation:isolate;
+  background:linear-gradient(95deg,#ffdc9e,#ffb25c 55%,#ff9440)!important;
+  animation:none!important;box-shadow:0 0 22px rgba(255,160,70,.55)}
+#qrbtn .ic-qr{grid-row:1/3;width:30px;height:30px}
+#qrbtn b{font:700 clamp(20px,5.8vw,23px)/1.12 var(--c-serif)!important}
+#qrbtn span{margin:1px 0 0!important;font-size:11.5px!important;opacity:.82}
+#qrbtn::after{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:0;width:42%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.62),transparent);transform:translate3d(-130%,0,0) skewX(-16deg);animation:cBtnSweep 4.6s ease-in-out infinite}
+@keyframes cBtnSweep{0%,62%{transform:translate3d(-130%,0,0) skewX(-16deg)}100%{transform:translate3d(320%,0,0) skewX(-16deg)}}
+
+#deck #dots svg{width:clamp(108px,17svh,150px);height:auto}
+#deck #dots{margin:0 0 6px}
+#deck #last .visit{padding:8px 0;text-align:left;font-size:13px}
+#deck .slab .total{margin-top:auto}
+#deck #last .empty-history{text-align:center}
+#deckStage #pager{position:relative;z-index:3;padding:0 0 4px}
+#pager i{width:7px;height:7px;cursor:pointer;position:relative}
+#pager i::after{content:"";position:absolute;inset:-12px -6px}
+#pager i.on{width:24px;background:linear-gradient(90deg,#ffdf9f,#ffa54d);box-shadow:0 0 12px rgba(255,180,90,.8)}
+
+/* ---------- Bottom navigation ---------- */
+html body nav[role="tablist"]{background:linear-gradient(to top,rgba(4,4,4,.82),rgba(4,4,4,.36) 66%,transparent)!important}
+html body nav[role="tablist"]>button[role="tab"]::before{transition:transform .42s cubic-bezier(.2,1.8,.4,1)}
+html body nav[role="tablist"]>button[role="tab"][aria-selected="true"]::before{transform:translateY(-1px) scale(1.12);filter:drop-shadow(0 0 7px rgba(255,190,100,.85))!important}
+html body nav[role="tablist"]>button[role="tab"][aria-selected="true"]::after{animation:cTabLine .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes cTabLine{from{width:0;opacity:0}}
+
+/* ---------- FX primitives ---------- */
+.fx-ring{position:fixed;z-index:34;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;pointer-events:none;
+  border:1.5px solid rgba(255,222,165,.95);box-shadow:0 0 14px rgba(255,170,70,.9),inset 0 0 8px rgba(255,170,70,.6);will-change:transform,opacity}
+.fx-sweep{position:fixed;left:-20%;right:-20%;height:150px;top:0;z-index:34;pointer-events:none;will-change:transform,opacity;
+  background:
+   linear-gradient(180deg,transparent 40%,rgba(255,70,110,.34) 48%,rgba(255,226,170,.95) 50%,rgba(80,220,255,.32) 52%,transparent 60%),
+   linear-gradient(180deg,transparent,rgba(255,160,70,.2) 50%,transparent)}
+
+/* ---------- Intro ---------- */
+#intro{background:#050403;overflow:hidden}
+#intro.iris{background:transparent;pointer-events:none}
+#intro.iris #skip{opacity:0}
+#intro.out{transform:none}
+#intro #slab,#intro #word{visibility:hidden}
+#intro.nogl #slab,#intro.nogl #word{visibility:visible}
+#skip{z-index:2;font-size:13px;transition:opacity .3s}
+
+/* ---------- QR portal ---------- */
+#modal{background:rgba(4,3,2,.86);z-index:40}
+.sheet{animation:cSheet .62s cubic-bezier(.16,1.05,.3,1) backwards}
+@keyframes cSheet{from{opacity:0;transform:perspective(900px) translate3d(0,70px,-340px) rotateX(38deg)}}
+.cta{transition:transform .3s cubic-bezier(.2,1.6,.4,1)}
+.timer i{box-shadow:0 0 8px rgba(255,190,100,.9)}
+
+.field{grid-template-columns:minmax(0,1fr)}
+.phone{min-width:0}
+@media (max-width:345px){
+  .install-tag{display:none!important}
+  #installPanel .install-action{font-size:11.5px!important;gap:5px}
+  #installPanel .ic{width:16px;height:16px}
+  .top b{font-size:19px}
+}
+@media (max-height:700px){
+  .top img{width:48px;height:48px}
+  #home .top::after{left:60px;top:40px}
+  #hello{font-size:26px;margin-bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){
+  #scene::after,#ribbons,#qrbtn::after{animation:none}
+  .sheet{animation:none}
+}
