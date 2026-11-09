@@ -1,0 +1,86 @@
+/* PAR ORDO GO — CLEAN MINIMAL NAV V5
+   Load AFTER par-ordo-go-royal-ui-v1.css and par-ordo-go-icon-fix-v4.css.
+   Removes the outer navigation panel; keeps SVG icons, labels and active underline. */
+nav[role="tablist"] {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: linear-gradient(to top, rgba(5, 8, 6, .52), rgba(5, 8, 6, .16) 58%, transparent) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 35 !important;
+}
+nav[role="tablist"] button[role="tab"],
+nav[role="tablist"] button[role="tab"][aria-selected="true"] {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 58px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 4px 2px 9px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(226, 215, 194, .78) !important;
+  font-size: clamp(11px, 2.9vw, 13px) !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  letter-spacing: .01em !important;
+  text-shadow: 0 1px 5px rgba(0,0,0,.72) !important;
+  transition: color .18s ease, transform .18s ease !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+nav[role="tablist"] button[role="tab"]:active {
+  transform: translateY(1px) scale(.98) !important;
+}
+nav[role="tablist"] button[role="tab"][aria-selected="true"] {
+  color: #f5cf88 !important;
+}
+/* Keep the V4 SVG mask icons, but make sure no old rounded icon tile returns. */
+nav[role="tablist"] button[role="tab"]::before,
+nav[role="tablist"] button[role="tab"][aria-selected="true"]::before {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: currentColor !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 1px 5px rgba(0,0,0,.6));
+}
+nav[role="tablist"] button[role="tab"][aria-selected="true"]::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 0 !important;
+  transform: translateX(-50%) !important;
+  width: 28px !important;
+  height: 3px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: linear-gradient(90deg, #d4a04f, #ffe4a8, #d4a04f) !important;
+  box-shadow: 0 0 10px rgba(245, 193, 98, .4) !important;
+}
+@media (max-width: 380px) {
+  nav[role="tablist"] { padding-left: 10px !important; padding-right: 10px !important; }
+  nav[role="tablist"] button[role="tab"] { min-height: 54px !important; font-size: 10px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  nav[role="tablist"] button[role="tab"] { transition: none !important; }
+}
