@@ -1,0 +1,128 @@
+/* PAR ORDO GO — FINAL NAVIGATION V8
+   The only bottom-tab skin. Load last in <head>, after all other styles.
+   No selected tile, square, filled button, or button shadow in any state. */
+html body nav[role="tablist"] {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: center !important;
+  justify-content: stretch !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 7px 12px calc(8px + env(safe-area-inset-bottom)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: linear-gradient(to top, rgba(5, 8, 6, .78), rgba(5, 8, 6, .25) 60%, transparent) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 35 !important;
+}
+html body nav[role="tablist"] > button[role="tab"],
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"],
+html body nav[role="tablist"] > button[role="tab"]:hover,
+html body nav[role="tablist"] > button[role="tab"]:active,
+html body nav[role="tablist"] > button[role="tab"]:focus,
+html body nav[role="tablist"] > button[role="tab"]:focus-visible {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 58px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 4px 2px 9px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: rgba(226, 215, 194, .78) !important;
+  font-size: clamp(11px, 2.9vw, 13px) !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  letter-spacing: .01em !important;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, .72) !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"] {
+  color: #f4cb80 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+/* Preserve V4 SVG mask icons, but never show a tile behind an icon. */
+html body nav[role="tablist"] > button[role="tab"]::before,
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"]::before {
+  display: block !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: currentColor !important;
+  background-color: currentColor !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .55)) !important;
+}
+/* The selected state is expressed only by gold color and a thin underline. */
+html body nav[role="tablist"] > button[role="tab"]::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"]::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 1px !important;
+  transform: translateX(-50%) !important;
+  width: 29px !important;
+  height: 3px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: linear-gradient(90deg, #ce9948, #ffe1a0, #ce9948) !important;
+  box-shadow: 0 0 10px rgba(246, 197, 111, .38) !important;
+}
+html body nav[role="tablist"] > button[role="tab"]:active {
+  transform: translateY(1px) !important;
+}
+/* Keep content clear of the fixed navigation. */
+html body main {
+  padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+}
+/* Keep the actual logo visible; the old data-URI swap is intentionally removed. */
+html body .orb img,
+html body #mark,
+html body .top img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+@media (max-width: 380px) {
+  html body nav[role="tablist"] { padding-left: 8px !important; padding-right: 8px !important; }
+  html body nav[role="tablist"] > button[role="tab"] { min-height: 54px !important; font-size: 10px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body nav[role="tablist"] > button[role="tab"] { transition: none !important; }
+}
