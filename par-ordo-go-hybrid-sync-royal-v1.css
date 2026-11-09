@@ -1,0 +1,145 @@
+/* PAR ORDO GO — HYBRID SYNC ROYAL BACKDROP V1
+   Load after the existing Royal UI / navigation styles. */
+.deck-stage{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  margin:22px -18px 0;
+  padding:0 0 8px;
+  border-radius:32px;
+  background:
+    radial-gradient(90% 35% at 50% 100%,rgba(255,153,55,.12),transparent 76%),
+    linear-gradient(180deg,rgba(5,8,7,.02),rgba(5,8,7,.18));
+}
+.deck-stage::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(7,8,7,.10) 0%,rgba(7,8,7,.04) 32%,rgba(5,8,7,.30) 100%),
+    radial-gradient(75% 26% at 50% 100%,rgba(255,167,62,.18),transparent 78%);
+}
+.deck-stage::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:0;
+  pointer-events:none;
+  opacity:.13;
+  background-image:var(--logs);
+  background-size:112px 97px;
+  mask-image:linear-gradient(135deg,#000,transparent 38%,transparent 64%,#000);
+  -webkit-mask-image:linear-gradient(135deg,#000,transparent 38%,transparent 64%,#000);
+}
+.deck-backdrop{
+  position:absolute;
+  z-index:0;
+  left:0;
+  top:0;
+  width:300%;
+  height:100%;
+  display:flex;
+  overflow:visible;
+  transform:translate3d(0,0,0) scale(1.045);
+  transform-origin:center center;
+  will-change:transform;
+  pointer-events:none;
+}
+.deck-backdrop-panel{
+  position:relative;
+  flex:0 0 33.333333%;
+  min-width:0;
+  height:100%;
+  overflow:hidden;
+  background-image:
+    linear-gradient(180deg,rgba(12,9,6,.10),rgba(9,8,7,.32)),
+    url("./assets/bg-banya.jpg");
+  background-size:100% 100%,cover;
+  background-repeat:no-repeat;
+}
+.deck-backdrop-panel:nth-child(1){background-position:center,50% 43%}
+.deck-backdrop-panel:nth-child(2){background-position:center,42% 58%}
+.deck-backdrop-panel:nth-child(3){background-position:center,58% 72%}
+.deck-backdrop-panel::before{
+  content:"";
+  position:absolute;
+  inset:-12%;
+  pointer-events:none;
+  background:
+    radial-gradient(44% 28% at 22% 70%,rgba(255,184,93,.20),transparent 74%),
+    radial-gradient(36% 32% at 78% 26%,rgba(255,224,170,.13),transparent 76%);
+  filter:blur(14px);
+  animation:deckSteamDrift 19s ease-in-out infinite alternate;
+  transform:translate3d(0,0,0);
+}
+.deck-backdrop-panel:nth-child(2)::before{animation-delay:-6s;opacity:.82}
+.deck-backdrop-panel:nth-child(3)::before{animation-delay:-12s;opacity:.72}
+.deck-backdrop-panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.18;
+  background:
+    linear-gradient(135deg,transparent 0 72%,rgba(239,181,92,.20) 72.2%,transparent 73%),
+    radial-gradient(70% 24% at 50% 100%,rgba(255,170,72,.26),transparent 72%);
+}
+.deck-backdrop-panel:nth-child(2)::after{
+  background:
+    linear-gradient(180deg,rgba(255,179,85,.05),rgba(5,10,8,.12)),
+    radial-gradient(55% 30% at 50% 86%,rgba(255,196,106,.28),transparent 76%);
+}
+.deck-backdrop-panel:nth-child(3)::after{
+  background:
+    linear-gradient(180deg,rgba(7,15,13,.10),rgba(5,8,7,.24)),
+    radial-gradient(60% 28% at 55% 90%,rgba(117,169,154,.12),transparent 75%);
+}
+#deck{
+  position:relative;
+  z-index:2;
+  margin:0;
+  padding:10px 18px 24px;
+  background:transparent;
+  scroll-behavior:auto;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+#deck .slab.glass{
+  background:
+    radial-gradient(100% 42% at 50% 100%,rgba(255,150,58,.20),transparent 78%),
+    linear-gradient(155deg,rgba(35,24,15,.68),rgba(6,11,9,.72));
+  border:1px solid rgba(255,213,144,.30);
+  box-shadow:
+    inset 0 1px 0 rgba(255,244,218,.20),
+    0 20px 48px -28px rgba(0,0,0,.82),
+    0 0 28px rgba(255,174,74,.07);
+  -webkit-backdrop-filter:blur(5px) saturate(1.08);
+  backdrop-filter:blur(5px) saturate(1.08);
+}
+#deck .slab::after{
+  background:linear-gradient(115deg,transparent 28%,rgba(255,236,198,.12) 49%,transparent 68%);
+}
+#deckStage #pager{
+  position:relative;
+  z-index:3;
+  margin:0 auto 3px;
+  padding:0 0 6px;
+}
+#deckStage #pager i{box-shadow:0 1px 7px rgba(0,0,0,.48)}
+#deckStage #pager i.on{box-shadow:0 0 13px rgba(255,192,91,.55)}
+@keyframes deckSteamDrift{
+  0%{transform:translate3d(-1.5%,1%,0) scale(1)}
+  100%{transform:translate3d(2%,-2%,0) scale(1.055)}
+}
+@media(max-width:380px){
+  .deck-stage{border-radius:26px}
+  #deck{padding-left:14px;padding-right:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  .deck-backdrop-panel::before{animation:none}
+}
+@media(hover:none){
+  #deck .slab.glass{-webkit-backdrop-filter:none;backdrop-filter:none}
+}
