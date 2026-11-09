@@ -1,5 +1,5 @@
-const CACHE='po-go-v14';
-const SHELL=['./','./index.html','./manifest.webmanifest','./assets/par-ordo-logo.png','./assets/bg-banya.jpg'];
+const CACHE='po-go-v15';
+const SHELL=['./','./index.html','./manifest.webmanifest','./assets/par-ordo-logo.png','./assets/par-ordo-logo.webp','./assets/bg-banya.jpg'];
 async function cacheOk(cache,request,response){
   if(response && response.ok && response.type!=='opaque'){
     try{await cache.put(request,response.clone())}catch(_){ }
