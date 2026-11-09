@@ -158,7 +158,7 @@ body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 
     <p class="sub">Добро пожаловать</p>
     <h1 id="hello">Айбек Н.</h1>
     <div id="deck">
-      <article class="slab glass"><div class="orb"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.visibility='hidden'"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Код действует 60 с</span></button></article>
+      <article class="slab glass"><div class="orb"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.visibility='hidden'"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
       <article class="slab glass"><h2>Бонус: 5-й вход бесплатно</h2><div class="dots" id="dots"></div><p class="note" id="bnote"></p></article>
       <article class="slab glass"><h2>Последние посещения</h2><div id="last"></div><div class="total"><span class="sub">Потрачено всего</span><b id="tot2"></b></div></article>
     </div>
@@ -185,7 +185,7 @@ body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 
     <h2 style="font:600 20px Georgia,serif">Ваш QR-код</h2>
     <div id="qr"></div>
     <div class="timer"><i id="bar"></i></div>
-    <p class="note" id="qnote">Обновится через 60 с</p>
+    <p class="note" id="qnote">Код обновляется каждые 30 секунд</p>
     <button class="close" id="close">Закрыть</button>
   </div>
 </div>
@@ -254,7 +254,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
   $('#home').hidden=b.dataset.t!=='home';$('#visits').hidden=b.dataset.t!=='visits';scrollTo(0,0)});
 
-/* ===== QR (динамический, 60 с) ===== */
+/* ===== QR (динамический, 30 с) ===== */
 let qrTimer=null,qrObj=null;
 async function newToken(){
   /* TODO: GET {apiUrl}/api/go/qr -> {token}. Сейчас — демо-токен */
@@ -265,9 +265,9 @@ async function drawQr(){
   if(window.QRCode){qrObj=new QRCode(box,{text:tok,width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}
   else box.textContent='Нет интернета: QR недоступен';
   const bar=$('#bar');bar.style.transition='none';bar.style.transform='scaleX(1)';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{bar.style.transition='transform 60s linear';bar.style.transform='scaleX(0)'}));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{bar.style.transition='transform 30s linear';bar.style.transform='scaleX(0)'}));
 }
-function openQr(){document.body.classList.add('qr');$('#modal').classList.add('open');drawQr();qrTimer=setInterval(drawQr,60000)}
+function openQr(){document.body.classList.add('qr');$('#modal').classList.add('open');drawQr();qrTimer=setInterval(drawQr,30000)}
 function closeQr(){document.body.classList.remove('qr');$('#modal').classList.remove('open');clearInterval(qrTimer)}
 $('#qrbtn').onclick=openQr;$('#close').onclick=closeQr;
 $('#modal').onclick=e=>{if(e.target.id==='modal')closeQr()};
