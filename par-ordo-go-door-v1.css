@@ -137,12 +137,13 @@ html body nav[role="tablist"]>button[role="tab"][aria-selected="true"]::after{an
 #intro.out{transform:none!important}
 #doorLogo{position:absolute;left:0;top:0;transform-origin:0 0;border-radius:50%;opacity:0;will-change:transform,opacity}
 #doorLogo img{display:block;width:100%;height:100%;border-radius:50%}
+#doorLogo{box-shadow:0 10px 30px rgba(0,0,0,.88)}
 #skip{z-index:2;font-size:13px;transition:opacity .3s}
 #intro.iris #skip{opacity:0}
 .qr-doors{position:absolute;overflow:hidden;border-radius:18px;perspective:700px;z-index:2}
-.qr-doors i{position:absolute;top:0;bottom:0;width:50%;background:repeating-linear-gradient(90deg,#3b2110 0 18px,#241409 18px 19px,#44270f 19px 37px,#241409 37px 38px)}
-.qr-doors i:first-child{left:0;transform-origin:left center;border-right:1px solid #f0b95a}
-.qr-doors i:last-child{right:0;transform-origin:right center;border-left:1px solid #f0b95a}
+.qr-doors i{position:absolute;top:0;bottom:0;width:50%;background-image:url(assets/door-marble.webp);background-repeat:no-repeat;background-size:200% auto}
+.qr-doors i:first-child{left:0;transform-origin:left center;background-position:left 22%;border-right:1px solid #f0b95a}
+.qr-doors i:last-child{right:0;transform-origin:right center;background-position:right 22%;border-left:1px solid #f0b95a}
 .qr-ok{position:absolute;z-index:3;display:grid;place-content:center;gap:8px;border-radius:18px;background:rgba(14,9,5,.94);color:#ffe2a8;font:700 22px var(--c-serif)}
 .qr-ok svg{width:78px;height:78px;margin:auto}
 #qr{position:relative;display:inline-grid;place-items:center;min-width:248px;min-height:248px;color:#1a1206}
