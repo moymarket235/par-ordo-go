@@ -1,0 +1,70 @@
+/* PAR ORDO GO — NAV NO TILE V7
+   MUST load after all other navigation stylesheets.
+   Removes rectangular/selected tab fills while preserving SVG icons and labels. */
+
+html body nav[role="tablist"] > button[role="tab"],
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"],
+html body nav[role="tablist"] > button[role="tab"]:hover,
+html body nav[role="tablist"] > button[role="tab"]:active,
+html body nav[role="tablist"] > button[role="tab"]:focus,
+html body nav[role="tablist"] > button[role="tab"]:focus-visible {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Keep the SVG mask artwork; remove any icon tile behind it. */
+html body nav[role="tablist"] > button[role="tab"]::before,
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"]::before {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: currentColor !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,.58)) !important;
+}
+
+/* Only the selected tab keeps a slim gold underline — never a filled square. */
+html body nav[role="tablist"] > button[role="tab"]::after {
+  background: none !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"] {
+  color: #f4cb80 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html body nav[role="tablist"] > button[role="tab"][aria-selected="true"]::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 1px !important;
+  transform: translateX(-50%) !important;
+  width: 29px !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, #ce9948, #ffe1a0, #ce9948) !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 10px rgba(246,197,111,.42) !important;
+}
+html body nav[role="tablist"] > button[role="tab"]:not([aria-selected="true"]) {
+  color: rgba(221,210,190,.76) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html body nav[role="tablist"] > button[role="tab"] { transition: none !important; }
+}
