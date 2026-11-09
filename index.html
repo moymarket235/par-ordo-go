@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ПАР ОРДО GO</title>
 <meta name="theme-color" content="#0a0807">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ПАР ОРДО GO">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preload" as="image" href="assets/bg-banya.jpg">
+<link rel="preload" as="image" href="assets/par-ordo-logo.png">
 <link rel="apple-touch-icon" href="assets/par-ordo-logo.png">
 <style>
 :root{--bg:#0a0807;--deep:#1d130a;--gold:#f0b95a;--ember:#ff7a2e;--mist:#e8d9c0;--ink:#f6efe2;--line:rgba(240,185,90,.26);--logs:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='97'%3E%3Cg fill='%23ffb050' fill-opacity='.05' stroke='%23ffc27a' stroke-opacity='.2' stroke-width='1.2'%3E%3Ccircle cx='0' cy='0' r='25'/%3E%3Ccircle cx='0' cy='0' r='16'/%3E%3Ccircle cx='0' cy='0' r='7'/%3E%3Ccircle cx='56' cy='0' r='25'/%3E%3Ccircle cx='56' cy='0' r='16'/%3E%3Ccircle cx='56' cy='0' r='7'/%3E%3Ccircle cx='112' cy='0' r='25'/%3E%3Ccircle cx='112' cy='0' r='16'/%3E%3Ccircle cx='112' cy='0' r='7'/%3E%3Ccircle cx='0' cy='97' r='25'/%3E%3Ccircle cx='0' cy='97' r='16'/%3E%3Ccircle cx='0' cy='97' r='7'/%3E%3Ccircle cx='56' cy='97' r='25'/%3E%3Ccircle cx='56' cy='97' r='16'/%3E%3Ccircle cx='56' cy='97' r='7'/%3E%3Ccircle cx='112' cy='97' r='25'/%3E%3Ccircle cx='112' cy='97' r='16'/%3E%3Ccircle cx='112' cy='97' r='7'/%3E%3Ccircle cx='28' cy='48.5' r='25'/%3E%3Ccircle cx='28' cy='48.5' r='16'/%3E%3Ccircle cx='28' cy='48.5' r='7'/%3E%3Ccircle cx='84' cy='48.5' r='25'/%3E%3Ccircle cx='84' cy='48.5' r='16'/%3E%3Ccircle cx='84' cy='48.5' r='7'/%3E%3C/g%3E%3C/svg%3E")}
@@ -99,6 +101,8 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .top span{padding:2px 8px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--ember));color:#1a1206;font-weight:800;font-size:12px}
 nav button[aria-selected=true]{background:linear-gradient(135deg,rgba(240,185,90,.26),rgba(255,122,46,.18));backdrop-filter:blur(10px)}
 .orb img{background:#0a0807}
+.orb.logo-missing{display:grid;place-items:center}
+.orb.logo-missing::after{content:"ПАР ОРДО";font:700 13px Georgia,serif;letter-spacing:.08em;color:#f0c56d;text-shadow:0 2px 12px #000}
 @media (prefers-reduced-motion:reduce){.slab::before{animation:none}}
 /* v3: banya photo scene, legible cards, lighter on GPU */
 html{-webkit-text-size-adjust:100%}
@@ -200,7 +204,7 @@ body.noauth nav{display:none}
 <div id="intro" role="presentation">
   <canvas id="c"></canvas>
   <div id="flash"></div>
-  <div id="slab"><img id="mark" src="assets/par-ordo-logo.png" alt="ПАР ОРДО" onerror="this.style.display='none'"></div>
+  <div id="slab"><img id="mark" src="assets/par-ordo-logo.png" alt="ПАР ОРДО" loading="eager" decoding="async" onerror="this.style.opacity='0'"></div>
   <div id="word">ПАР ОРДО GO</div>
   <button id="skip">Пропустить</button>
 </div>
@@ -241,7 +245,7 @@ body.noauth nav{display:none}
       <p class="install-foot">Интерфейс адаптируется к частоте обновления экрана. Реальные 120 FPS зависят от дисплея и устройства.</p>
     </div>
     <div id="deck">
-      <article class="slab glass"><div class="orb"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.visibility='hidden'"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
+      <article class="slab glass"><div class="orb"><img src="assets/par-ordo-logo.png" alt="ПАР ОРДО" loading="eager" decoding="async" onerror="this.remove();this.parentElement.classList.add('logo-missing')"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
       <article class="slab glass"><h2>Бонус: 5-й вход бесплатно</h2><div class="dots" id="dots"></div><p class="note" id="bnote"></p></article>
       <article class="slab glass"><h2>Последние посещения</h2><div id="last"></div><div class="total"><span class="sub">Потрачено всего</span><b id="tot2"></b></div></article>
     </div>
@@ -305,7 +309,6 @@ body.noauth nav{display:none}
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 /* ===== Customer data: production values are loaded from Cloudflare Worker ===== */
 const ME={id:'',name:''};
@@ -314,11 +317,12 @@ const BONUS={active:true,count:VISITS.length,need:5};
 const $=s=>document.querySelector(s), money=n=>n.toLocaleString('ru-RU')+' сом';
 
 addEventListener('error',()=>{const i=$('#intro');if(i){i.remove();document.body.classList.add('ready')}});
+document.querySelectorAll('img[src*="par-ordo-logo.png"]').forEach(img=>{img.loading='eager';img.decoding='async'});
 /* ===== intro ===== */
 (function(){
   const intro=$('#intro');let done=false;
   const ready=()=>document.body.classList.add('ready');
-  const end=()=>{if(done)return;done=true;intro.classList.add('out');ready();setTimeout(()=>intro.remove(),1100)};
+  const end=()=>{if(done)return;done=true;intro.classList.add('out');ready();window.__poAmbientResume?.();setTimeout(()=>intro.remove(),1100)};
   let seen=false;try{seen=sessionStorage.getItem('po_go_intro')==='1'}catch(e){}
   if(seen||matchMedia('(prefers-reduced-motion:reduce)').matches){intro.remove();ready();return}
   try{sessionStorage.setItem('po_go_intro','1')}catch(e){}
@@ -383,21 +387,37 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   scrollTo(0,0)
 });
 
-/* ===== QR (динамический, 30 с) ===== */
-let qrTimer=null,qrObj=null;
+/* ===== QR (динамический, 30 с; библиотека загружается только по нажатию) ===== */
+const QR_LIBRARY_URL='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+let qrTimer=null,qrObj=null,qrLibraryPromise=null;
+function loadQrLibrary(){
+  if(window.QRCode)return Promise.resolve(true);
+  if(qrLibraryPromise)return qrLibraryPromise;
+  qrLibraryPromise=new Promise(resolve=>{
+    const script=document.createElement('script');
+    script.src=QR_LIBRARY_URL;script.async=true;script.crossOrigin='anonymous';
+    script.onload=()=>resolve(!!window.QRCode);
+    script.onerror=()=>resolve(false);
+    document.head.appendChild(script);
+  });
+  return qrLibraryPromise;
+}
 async function newToken(){
   /* TODO: GET {apiUrl}/api/go/qr -> {token}. Сейчас — демо-токен */
   return 'PARORDO-DEMO:'+ME.id+':'+Math.random().toString(36).slice(2,10)+':'+Date.now();
 }
 async function drawQr(){
-  const box=$('#qr'),tok=await newToken();box.innerHTML='';
-  if(window.QRCode){qrObj=new QRCode(box,{text:tok,width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}
-  else box.textContent='Нет интернета: QR недоступен';
-  const bar=$('#bar');bar.style.transition='none';bar.style.transform='scaleX(1)';
+  const box=$('#qr'),bar=$('#bar'),tok=await newToken();box.textContent='QR даярдалууда…';
+  const ready=await loadQrLibrary();
+  if(!document.body.classList.contains('qr'))return;
+  box.innerHTML='';
+  if(ready&&window.QRCode){qrObj=new QRCode(box,{text:tok,width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}
+  else box.textContent='QR үчүн интернет байланышы керек';
+  bar.style.transition='none';bar.style.transform='scaleX(1)';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{bar.style.transition='transform 30s linear';bar.style.transform='scaleX(0)'}));
 }
-function openQr(){document.body.classList.add('qr');$('#modal').classList.add('open');drawQr();qrTimer=setInterval(drawQr,30000)}
-function closeQr(){document.body.classList.remove('qr');$('#modal').classList.remove('open');clearInterval(qrTimer)}
+function openQr(){document.body.classList.add('qr');$('#modal').classList.add('open');window.__poAmbientPause?.();drawQr();clearInterval(qrTimer);qrTimer=setInterval(drawQr,30000)}
+function closeQr(){document.body.classList.remove('qr');$('#modal').classList.remove('open');clearInterval(qrTimer);window.__poAmbientResume?.()}
 $('#qrbtn').onclick=openQr;$('#close').onclick=closeQr;
 $('#modal').onclick=e=>{if(e.target.id==='modal')closeQr()};
 addEventListener('keydown',e=>{if(e.key==='Escape')closeQr()});
@@ -412,22 +432,66 @@ function tilt(){const c=deck.scrollLeft+deck.clientWidth/2;let best=0,bd=1e9;
   pg.forEach((p,i)=>p.classList.toggle('on',i===best))}
 let tk=0;deck.addEventListener('scroll',()=>{if(!tk)tk=requestAnimationFrame(()=>{tk=0;tilt()})},{passive:true});addEventListener('resize',tilt);tilt();
 
-/* ===== ambient particles ===== */
+/* ===== ambient particles: refresh-synced and adaptive, low repaint cost ===== */
 (function(){
-  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  const cv=$('#bg'),g=cv.getContext('2d'),dpr=Math.min(devicePixelRatio||1,1.5);let W,H;
-  const fit=()=>{W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;g.setTransform(dpr,0,0,dpr,0,0)};fit();addEventListener('resize',fit);
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(reduce)return;
+  const cv=$('#bg'),g=cv.getContext('2d',{alpha:true,desynchronized:true});
+  if(!g)return;
+  const cores=navigator.hardwareConcurrency||4;
+  const memory=navigator.deviceMemory||4;
+  const lowPower=cores<=4||memory<=4;
+  const maxDpr=lowPower?1.15:1.35;
+  let W=0,H=0,dpr=1,raf=0,last=0,frameSamples=0,avgFrame=16.7;
   const cols=['240,185,90','255,122,46','255,160,80','255,210,150'];
-  const ST=Array.from({length:6},()=>({x:Math.random()*W,y:H*(.4+Math.random()*.7),r:90+Math.random()*120,v:.12+Math.random()*.2,w:Math.random()*6}));
-  const P=Array.from({length:(navigator.hardwareConcurrency||4)<=4?26:44},()=>({x:Math.random()*W,y:Math.random()*H,r:.8+Math.random()*2.2,v:.15+Math.random()*.5,c:cols[Math.random()*4|0],w:Math.random()*6}));
-  let last=0;
-  (function f(t){
-    const dt=last?Math.min((t-last)/(1000/60),3):1;last=t;
-    if(!document.hidden&&!document.body.classList.contains('qr')){g.clearRect(0,0,W,H);g.globalCompositeOperation='lighter';
-      for(const q of ST){q.y-=q.v*dt;if(q.y<-q.r)q.y=H+q.r;const x=q.x+Math.sin(t/4000+q.w)*40,gr=g.createRadialGradient(x,q.y,0,x,q.y,q.r);gr.addColorStop(0,'rgba(255,235,210,.07)');gr.addColorStop(1,'rgba(255,235,210,0)');g.fillStyle=gr;g.beginPath();g.arc(x,q.y,q.r,0,6.283);g.fill()}
-      for(const p of P){p.y-=p.v*dt;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
-        g.fillStyle=`rgba(${p.c},.55)`;g.beginPath();g.arc(p.x+Math.sin(t/1500+p.w)*14,p.y,p.r,0,6.283);g.fill()}}
-    requestAnimationFrame(f)})(0);
+  const maxParticles=lowPower?22:36;
+  let activeParticles=maxParticles;
+  let particles=[];
+  const smoke= document.createElement('canvas');smoke.width=128;smoke.height=128;
+  const sg=smoke.getContext('2d');
+  if(sg){const grad=sg.createRadialGradient(64,64,0,64,64,64);grad.addColorStop(0,'rgba(255,235,210,.07)');grad.addColorStop(1,'rgba(255,235,210,0)');sg.fillStyle=grad;sg.fillRect(0,0,128,128)}
+  const glows=Array.from({length:lowPower?3:5},()=>({x:Math.random(),y:.4+Math.random()*.6,r:.16+Math.random()*.18,v:.035+Math.random()*.025,w:Math.random()*6}));
+  function fit(){
+    dpr=Math.min(devicePixelRatio||1,maxDpr);
+    W=innerWidth;H=innerHeight;
+    cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
+    cv.style.width=W+'px';cv.style.height=H+'px';g.setTransform(dpr,0,0,dpr,0,0);
+    particles=Array.from({length:maxParticles},()=>({x:Math.random()*W,y:Math.random()*H,r:.7+Math.random()*1.8,v:.12+Math.random()*.38,c:cols[Math.random()*4|0],w:Math.random()*6}));
+  }
+  fit();
+  let resizeRaf=0;
+  addEventListener('resize',()=>{if(!resizeRaf)resizeRaf=requestAnimationFrame(()=>{resizeRaf=0;fit()})},{passive:true});
+  function stop(){if(raf){cancelAnimationFrame(raf);raf=0}last=0}
+  function start(){const intro=document.getElementById('intro');if(!raf&&!document.hidden&&!document.body.classList.contains('qr')&&(!intro||intro.classList.contains('out')))raf=requestAnimationFrame(draw)}
+  function draw(t){
+    raf=0;
+    if(document.hidden||document.body.classList.contains('qr')){last=0;return}
+    const dt=last?Math.min((t-last)/16.6667,2.5):1;last=t;
+    avgFrame=avgFrame*.92+(Math.max(0,t-(draw.prev||t))||16.7)*.08;draw.prev=t;
+    frameSamples++;
+    if(frameSamples%90===0){
+      if(avgFrame>23)activeParticles=Math.max(12,activeParticles-6);
+      else if(avgFrame<18)activeParticles=Math.min(maxParticles,activeParticles+3);
+    }
+    g.clearRect(0,0,W,H);
+    if(smoke.width){g.globalCompositeOperation='lighter';
+      for(const q of glows){q.y-=q.v*dt/H;if(q.y<-.2)q.y=1.05;const x=q.x*W+Math.sin(t/4000+q.w)*W*.05,y=q.y*H,r=q.r*Math.max(W,H);g.globalAlpha=1;g.drawImage(smoke,x-r,y-r,r*2,r*2)}
+    }
+    g.globalCompositeOperation='source-over';
+    const groups=new Map();
+    for(let i=0;i<activeParticles;i++){
+      const p=particles[i];p.y-=p.v*dt;
+      if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
+      let path=groups.get(p.c);if(!path){path=new Path2D();groups.set(p.c,path)}
+      path.moveTo(p.x+Math.sin(t/1500+p.w)*14+p.r,p.y);
+      path.arc(p.x+Math.sin(t/1500+p.w)*14,p.y,p.r,0,6.283);
+    }
+    for(const [color,path] of groups){g.fillStyle=`rgba(${color},.55)`;g.fill(path)}
+    raf=requestAnimationFrame(draw);
+  }
+  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+  window.__poAmbientPause=stop;window.__poAmbientResume=start;
+  start();
 })();
 
 /* ===== registration ===== */

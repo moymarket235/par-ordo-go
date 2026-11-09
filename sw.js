@@ -1,17 +1,55 @@
-const V='po-go-v12',QR='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-const FILES=['./','index.html','manifest.webmanifest','assets/par-ordo-logo.png','assets/bg-banya.jpg'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(async c=>{
-  await Promise.all(FILES.map(f=>c.add(f).catch(()=>{})));
-  try{await c.add(new Request(QR,{mode:'no-cors'}))}catch(_){}
-}).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
-const put=(r,x)=>{const c=x.clone();caches.open(V).then(k=>k.put(r,c));return x};
-self.addEventListener('fetch',e=>{
-  const r=e.request;if(r.method!=='GET')return;
-  const u=new URL(r.url);
-  if(u.href===QR){e.respondWith(caches.match(r).then(m=>m||fetch(r)));return}
-  if(u.origin!==location.origin)return;
-  if(/\.(jpg|jpeg|png|webp)$/.test(u.pathname)){
-    e.respondWith(caches.match(r).then(m=>{const n=fetch(r).then(x=>put(r,x)).catch(()=>m);return m||n}));return}
-  e.respondWith(fetch(r).then(x=>put(r,x)).catch(()=>caches.match(r)));
+const CACHE='po-go-v13';
+const SHELL=['./','./index.html','./manifest.webmanifest','./assets/par-ordo-logo.png','./assets/bg-banya.jpg'];
+async function cacheOk(cache,request,response){
+  if(response && response.ok && response.type!=='opaque'){
+    try{await cache.put(request,response.clone())}catch(_){ }
+  }
+  return response;
+}
+self.addEventListener('install',event=>{
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE);
+    await Promise.all(SHELL.map(async path=>{
+      try{const response=await fetch(path,{cache:'reload'});if(response.ok)await cache.put(path,response)}catch(_){ }
+    }));
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)));
+    await self.clients.claim();
+  })());
+});
+self.addEventListener('fetch',event=>{
+  const request=event.request;
+  if(request.method!=='GET')return;
+  const url=new URL(request.url);
+  if(url.origin!==self.location.origin)return;
+  const isPage=request.mode==='navigate'||url.pathname.endsWith('.html')||url.pathname.endsWith('/');
+  const isImage=/\.(png|jpg|jpeg|webp|svg)$/i.test(url.pathname);
+  if(isPage||isImage){
+    event.respondWith((async()=>{
+      const cache=await caches.open(CACHE);
+      try{
+        const response=await fetch(request);
+        if(response.ok)await cacheOk(cache,request,response);
+        return response;
+      }catch(_){
+        const cached=await cache.match(request)||await cache.match('./index.html');
+        return cached||new Response('Offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});
+      }
+    })());
+    return;
+  }
+  event.respondWith((async()=>{
+    const cached=await caches.match(request);
+    if(cached)return cached;
+    try{
+      const response=await fetch(request);
+      if(response.ok){const cache=await caches.open(CACHE);await cacheOk(cache,request,response)}
+      return response;
+    }catch(_){return new Response('',{status:504})}
+  })());
 });
