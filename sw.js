@@ -1,4 +1,4 @@
-const V='po-go-v11',QR='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+const V='po-go-v12',QR='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
 const FILES=['./','index.html','manifest.webmanifest','assets/par-ordo-logo.png','assets/bg-banya.jpg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(async c=>{
   await Promise.all(FILES.map(f=>c.add(f).catch(()=>{})));
