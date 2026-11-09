@@ -167,6 +167,31 @@ body.noauth nav{display:none}
 .close{margin-top:10px;padding:12px 26px;border-radius:14px;border:1px solid var(--line);color:var(--mist)}
 .demo{position:fixed;top:calc(env(safe-area-inset-top) + 6px);left:50%;transform:translateX(-50%);font-size:11px;color:var(--mist);opacity:.45;z-index:5}
 @media (prefers-reduced-motion:reduce){#intro,#slab,#word{transition:none}.sheet{animation:none}}
+
+/* PAR ORDO GO frontend additions — existing animation styles remain unchanged */
+.install-panel{padding:18px;margin:18px 0 16px}
+.install-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.install-head h2,.support-card h2{font-size:17px;font-weight:700}
+.install-tag{font-size:11px;letter-spacing:.06em;color:var(--gold);border:1px solid var(--line);border-radius:9px;padding:4px 8px;white-space:nowrap}
+.install-copy{font-size:13px;line-height:1.5;color:var(--mist);opacity:.9}
+.install-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.install-action{min-height:48px;border-radius:14px;padding:10px 12px;border:1px solid var(--line);font-weight:700;font-size:13px;background:rgba(10,7,4,.45)}
+.install-action.primary{background:linear-gradient(135deg,#f0c56d,var(--ember));color:#1a1206;border:0}
+.install-action:disabled{opacity:.55;cursor:not-allowed}
+.support-card{padding:18px;margin:14px 0}
+.support-card p{font-size:13px;line-height:1.5;color:var(--mist);opacity:.9}
+.profile-kv{display:grid;gap:10px;margin-top:14px}
+.profile-kv div{display:flex;justify-content:space-between;gap:12px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}
+.profile-kv span{color:var(--mist);opacity:.75}
+.profile-kv b{text-align:right;overflow-wrap:anywhere}
+.support-card textarea{width:100%;min-height:108px;resize:vertical;border-radius:14px;border:1px solid rgba(255,214,160,.22);background:rgba(10,7,4,.6);color:var(--ink);font:500 15px/1.45 system-ui;padding:12px;margin:10px 0}
+.support-card textarea:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px rgba(240,185,90,.16)}
+.status-line{font-size:12px;line-height:1.45;color:var(--gold);margin-top:10px;overflow-wrap:anywhere}
+.visit-purchases{font-size:12px;color:var(--mist);opacity:.82;margin-top:5px;line-height:1.45}
+.empty-history{padding:14px 2px;color:var(--mist);opacity:.8;font-size:13px;line-height:1.5}
+.install-foot{margin-top:10px;font-size:11px;line-height:1.45;color:var(--mist);opacity:.7}
+@media(max-width:360px){.install-actions{grid-template-columns:1fr}.install-action{width:100%}}
+
 </style>
 </head>
 <body>
@@ -182,7 +207,7 @@ body.noauth nav{display:none}
 
 <main>
   <section id="reg" hidden>
-    <div class="top"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.display='none'"><b>ПАР ОРДО</b><span>GO</span><em class="chip">демо</em></div>
+    <div class="top"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.display='none'"><b>ПАР ОРДО</b><span>GO</span><em class="chip">PREVIEW</em></div>
     <h1>Регистрация</h1>
     <p class="sub">Создайте профиль, чтобы копить бонусы и видеть свои посещения</p>
     <form id="regform" class="glass formcard" novalidate autocomplete="on">
@@ -203,9 +228,18 @@ body.noauth nav{display:none}
   </section>
 
   <section id="home">
-    <div class="top"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.display='none'"><b>ПАР ОРДО</b><span>GO</span><em class="chip">демо</em></div>
+    <div class="top"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.display='none'"><b>ПАР ОРДО</b><span>GO</span><em class="chip">PREVIEW</em></div>
     <p class="sub">Добро пожаловать</p>
-    <h1 id="hello">Айбек Н.</h1>
+    <h1 id="hello">Добро пожаловать</h1>
+    <div class="card glass install-panel" id="installPanel">
+      <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
+      <p class="install-copy">Установите PAR ORDO GO на телефон для быстрого доступа. PWA можно установить из браузера. Android APK будет доступен после отдельной сборки.</p>
+      <div class="install-actions">
+        <button type="button" class="install-action primary" id="installPwaBtn">Установить PWA</button>
+        <button type="button" class="install-action" id="apkBtn">APK · скоро</button>
+      </div>
+      <p class="install-foot">Интерфейс адаптируется к частоте обновления экрана. Реальные 120 FPS зависят от дисплея и устройства.</p>
+    </div>
     <div id="deck">
       <article class="slab glass"><div class="orb"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.visibility='hidden'"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
       <article class="slab glass"><h2>Бонус: 5-й вход бесплатно</h2><div class="dots" id="dots"></div><p class="note" id="bnote"></p></article>
@@ -216,18 +250,48 @@ body.noauth nav{display:none}
 
   <section id="visits" hidden>
     <h1>Посещения</h1>
-    <p class="sub">Браслет, покупки и сумма за каждый визит</p>
+    <p class="sub">История визитов, браслет, каждая покупка и сумма</p>
     <div class="card glass" style="margin-top:18px">
       <div id="all"></div>
       <div class="total"><span class="sub">Потрачено всего</span><b id="tot"></b></div>
     </div>
-    <button class="linkbtn" id="logout">Сменить профиль</button>
+  </section>
+
+  <section id="profile" hidden>
+    <h1>Мой аккаунт</h1>
+    <p class="sub">Один клиент — один аккаунт PAR ORDO</p>
+    <div class="card glass support-card">
+      <h2>Данные аккаунта</h2>
+      <div class="profile-kv">
+        <div><span>Имя</span><b id="profileName">—</b></div>
+        <div><span>Телефон</span><b id="profilePhone">—</b></div>
+        <div><span>ID клиента</span><b id="profileId">—</b></div>
+      </div>
+      <p style="margin-top:14px">Создать второй аккаунт вместо первого нельзя. Самостоятельное изменение данных отключено.</p>
+    </div>
+    <div class="card glass support-card">
+      <h2>Запрос на обновление аккаунта</h2>
+      <p>Изменение аккаунта выполняется через PAR ORDO Поддержка. Укажите причину, по которой требуется обновление данных.</p>
+      <form id="supportRequestForm">
+        <label class="lbl" for="supportReason">Причина обращения</label>
+        <textarea id="supportReason" maxlength="1000" required placeholder="Например: изменился номер телефона, старый номер больше недоступен..."></textarea>
+        <button type="submit" class="cta" style="width:100%">Подготовить запрос</button>
+      </form>
+      <p class="status-line" id="supportState">Запрос сохранится как черновик на устройстве. Отправка в поддержку включится после подключения Worker.</p>
+    </div>
+    <div class="card glass support-card">
+      <h2>Уведомления о бонусах</h2>
+      <p>Разрешите уведомления на этом устройстве. Автоматические уведомления о визитах и бонусах подключим через Worker.</p>
+      <button type="button" class="install-action primary" id="notifyBtn" style="width:100%;margin-top:12px">Включить уведомления</button>
+      <p class="status-line" id="notifyState"></p>
+    </div>
   </section>
 </main>
 
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-t="home">Главная</button>
   <button role="tab" aria-selected="false" data-t="visits">Посещения</button>
+  <button role="tab" aria-selected="false" data-t="profile">Профиль</button>
 </nav>
 
 <div id="toast" role="status"></div>
@@ -236,21 +300,17 @@ body.noauth nav{display:none}
     <h2 style="font:600 20px Georgia,serif">Ваш QR-код</h2>
     <div id="qr"></div>
     <div class="timer"><i id="bar"></i></div>
-    <p class="note" id="qnote">Код обновляется каждые 30 секунд</p>
+    <p class="note" id="qnote">ДЕМО QR · реальный вход активируется после подключения Worker</p>
     <button class="close" id="close">Закрыть</button>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-/* ===== DEMO DATA: заменить на ответы API (Cloudflare Worker) ===== */
-const ME={id:'demo-customer',name:'Айбек Н.'};
-const BONUS={active:true,count:3,need:4};
-const VISITS=[
- {date:'08.11.2026',bracelet:14,items:'Чай, веник, полотенце',sum:1350},
- {date:'01.11.2026',bracelet:7,items:'Шоро, вода',sum:900},
- {date:'25.10.2026',bracelet:22,items:'Чай с лимоном',sum:650}
-];
+/* ===== Customer data: production values are loaded from Cloudflare Worker ===== */
+const ME={id:'',name:''};
+const VISITS=(()=>{try{const v=JSON.parse(localStorage.getItem('po_go_visits')||'[]');return Array.isArray(v)?v:[]}catch(e){return[]} })();
+const BONUS={active:true,count:VISITS.length,need:5};
 const $=s=>document.querySelector(s), money=n=>n.toLocaleString('ru-RU')+' сом';
 
 addEventListener('error',()=>{const i=$('#intro');if(i){i.remove();document.body.classList.add('ready')}});
@@ -291,25 +351,43 @@ addEventListener('error',()=>{const i=$('#intro');if(i){i.remove();document.body
 
 /* ===== home ===== */
 /* greeting is set in enterApp() */
-const dots=$('#dots'),C=2*Math.PI*64,fr=BONUS.count/BONUS.need;
-dots.innerHTML=`<svg viewBox="0 0 160 160" width="200" height="200" role="img" aria-label="${BONUS.count} из ${BONUS.need} визитов"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c56d"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><circle cx="80" cy="80" r="64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/><circle id="arc" cx="80" cy="80" r="64" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .8s;filter:drop-shadow(0 0 8px rgba(255,138,61,.7))"/><text x="80" y="84" text-anchor="middle" font-family="Georgia,serif" font-size="40" font-weight="700" fill="#f3efe3">${BONUS.count}/${BONUS.need}</text><text x="80" y="106" text-anchor="middle" font-size="13" fill="#e8d9c0">визитов</text></svg>`;
-requestAnimationFrame(()=>requestAnimationFrame(()=>{$('#arc').style.strokeDashoffset=C*(1-fr)}));
-$('#bnote').textContent=BONUS.active
- ?`Пришли ${BONUS.count} из ${BONUS.need}. Ещё ${BONUS.need-BONUS.count} визит — и вход 300 сом бесплатно.`
- :'Бонус пока не активирован. Попросите администратора включить его.';
-const row=v=>`<div class="visit"><div><b>Браслет №${v.bracelet}</b><small>${v.date} · ${v.items}</small></div><div class="sum">${money(v.sum)}</div></div>`;
-$('#last').innerHTML=VISITS.slice(0,2).map(row).join('');
-$('#all').innerHTML=VISITS.map(row).join('');
-$('#tot').textContent=$('#tot2').textContent=money(VISITS.reduce((s,v)=>s+v.sum,0));
+const dots=$('#dots'),C=2*Math.PI*64,visitCount=VISITS.length;
+const cycleProgress=visitCount%BONUS.need;
+const shownProgress=visitCount>0&&cycleProgress===0?BONUS.need:cycleProgress;
+const rewardReady=visitCount>0&&cycleProgress===0,fr=shownProgress/BONUS.need;
+dots.innerHTML=`<svg viewBox="0 0 160 160" width="200" height="200" role="img" aria-label="${shownProgress} из ${BONUS.need} визитов"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c56d"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><circle cx="80" cy="80" r="64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/><circle id="arc" cx="80" cy="80" r="64" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .8s;filter:drop-shadow(0 0 8px rgba(255,138,61,.7))"/><text x="80" y="84" text-anchor="middle" font-family="Georgia,serif" font-size="40" font-weight="700" fill="#f3efe3">${shownProgress}/${BONUS.need}</text><text x="80" y="106" text-anchor="middle" font-size="13" fill="#e8d9c0">визитов</text></svg>`;
+requestAnimationFrame(()=>requestAnimationFrame(()=>{const arc=$('#arc');if(arc)arc.style.strokeDashoffset=C*(1-fr)}));
+$('#bnote').textContent=rewardReady
+ ?'Пятый визит достигнут. Бесплатный бонус ожидает подтверждения сервером PAR ORDO.'
+ :`До бесплатного бонуса за 5-й визит осталось ${BONUS.need-shownProgress} визит(а). Счётчик станет общим и автоматическим после подключения Worker.`;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const row=v=>{
+  const products=Array.isArray(v.purchases)
+    ?v.purchases.map(p=>`${esc(p.name||p.title||'Товар')} × ${Number(p.quantity||p.qty||1)}`).join(' · ')
+    :esc(v.items||'Покупки не указаны');
+  const bracelet=esc(v.braceletNumber??v.bracelet??'—');
+  const date=esc(v.date||v.createdAt||'Дата не указана');
+  const sum=Number(v.sum||v.total||0);
+  return `<div class="visit"><div><b>Браслет №${bracelet}</b><small>${date}</small><div class="visit-purchases">${products||'Покупок нет'}</div></div><div class="sum">${money(sum)}</div></div>`;
+};
+$('#last').innerHTML=VISITS.length?VISITS.slice(0,2).map(row).join(''):'<div class="empty-history">Посещений пока нет. История визитов и покупок появится после синхронизации с PAR ORDO.</div>';
+$('#all').innerHTML=VISITS.length?VISITS.map(row).join(''):'<div class="empty-history">История пока пуста. Здесь будут браслет, каждая покупка и сумма каждого визита.</div>';
+const totalSpent=VISITS.reduce((s,v)=>s+Number(v.sum||v.total||0),0);
+$('#tot').textContent=$('#tot2').textContent=money(totalSpent);
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
-  $('#home').hidden=b.dataset.t!=='home';$('#visits').hidden=b.dataset.t!=='visits';scrollTo(0,0)});
+  $('#home').hidden=b.dataset.t!=='home';
+  $('#visits').hidden=b.dataset.t!=='visits';
+  $('#profile').hidden=b.dataset.t!=='profile';
+  if(b.dataset.t==='profile')renderProfile(LS.get('po_go_user'));
+  scrollTo(0,0)
+});
 
 /* ===== QR (динамический, 30 с) ===== */
 let qrTimer=null,qrObj=null;
 async function newToken(){
   /* TODO: GET {apiUrl}/api/go/qr -> {token}. Сейчас — демо-токен */
-  return 'PARORDO:'+ME.id+':'+Math.random().toString(36).slice(2,10)+':'+Date.now();
+  return 'PARORDO-DEMO:'+ME.id+':'+Math.random().toString(36).slice(2,10)+':'+Date.now();
 }
 async function drawQr(){
   const box=$('#qr'),tok=await newToken();box.innerHTML='';
@@ -344,32 +422,37 @@ let tk=0;deck.addEventListener('scroll',()=>{if(!tk)tk=requestAnimationFrame(()=
   const P=Array.from({length:(navigator.hardwareConcurrency||4)<=4?26:44},()=>({x:Math.random()*W,y:Math.random()*H,r:.8+Math.random()*2.2,v:.15+Math.random()*.5,c:cols[Math.random()*4|0],w:Math.random()*6}));
   let last=0;
   (function f(t){
-    if(t-last<30){requestAnimationFrame(f);return}last=t;
+    const dt=last?Math.min((t-last)/(1000/60),3):1;last=t;
     if(!document.hidden&&!document.body.classList.contains('qr')){g.clearRect(0,0,W,H);g.globalCompositeOperation='lighter';
-      for(const q of ST){q.y-=q.v;if(q.y<-q.r)q.y=H+q.r;const x=q.x+Math.sin(t/4000+q.w)*40,gr=g.createRadialGradient(x,q.y,0,x,q.y,q.r);gr.addColorStop(0,'rgba(255,235,210,.07)');gr.addColorStop(1,'rgba(255,235,210,0)');g.fillStyle=gr;g.beginPath();g.arc(x,q.y,q.r,0,6.283);g.fill()}
-      for(const p of P){p.y-=p.v;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
+      for(const q of ST){q.y-=q.v*dt;if(q.y<-q.r)q.y=H+q.r;const x=q.x+Math.sin(t/4000+q.w)*40,gr=g.createRadialGradient(x,q.y,0,x,q.y,q.r);gr.addColorStop(0,'rgba(255,235,210,.07)');gr.addColorStop(1,'rgba(255,235,210,0)');g.fillStyle=gr;g.beginPath();g.arc(x,q.y,q.r,0,6.283);g.fill()}
+      for(const p of P){p.y-=p.v*dt;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
         g.fillStyle=`rgba(${p.c},.55)`;g.beginPath();g.arc(p.x+Math.sin(t/1500+p.w)*14,p.y,p.r,0,6.283);g.fill()}}
     requestAnimationFrame(f)})(0);
 })();
 
 /* ===== registration ===== */
 const API_URL=''; /* TODO этап 2: адрес Cloudflare Worker, напр. https://par-ordo-api.xxx.workers.dev */
-const DEMO_BASE=[
-  {id:'c-101',phone:'+996555123456',last:'Нурланов',first:'Айбек',mid:'Эркинович'},
-  {id:'c-102',phone:'+77011234567',last:'Иванов',first:'Сергей',mid:''}
-];
+const DEMO_BASE=[]; /* Реальные клиенты будут проверяться через Worker API. */
 const maskPhone=p=>{const cc=p.startsWith('+996')?'+996':'+7',n=p.slice(cc.length);return cc+' '+n.slice(0,3)+' ••• '+n.slice(-3)};
 async function lookup(q){
   if(API_URL){
     try{const r=await fetch(API_URL+'/api/go/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});if(r.ok)return await r.json()}catch(e){}
     return{match:null};
   }
-  const n=x=>(x||'').trim().toLowerCase();
-  if(q.phone){const c=DEMO_BASE.find(c=>c.phone===q.phone);if(c)return{match:'phone',customer:c}}
-  if(q.first&&q.last){const c=DEMO_BASE.find(c=>n(c.first)===n(q.first)&&n(c.last)===n(q.last));if(c)return{match:'name',hint:maskPhone(c.phone)}}
+  /* Offline preview cannot verify an identity. Worker API will perform the real lookup. */
   return{match:null};
 }
 const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+function renderProfile(u){
+  if(!u)return;
+  $('#profileName').textContent=[u.first,u.last].filter(Boolean).join(' ')||'—';
+  $('#profilePhone').textContent=u.phone||'—';
+  $('#profileId').textContent=u.id||'—';
+  const req=LS.get('po_go_account_request');
+  if(req&&req.status==='draft-awaiting-worker')
+    $('#supportState').textContent='Өтүнүч түзмөктө сакталган. Worker кошулганда жөнөтүү активдешет.';
+}
+
 const cap=t=>t.trim().replace(/\s+/g,' ').replace(/^\p{L}/u,c=>c.toUpperCase());
 let CC='996',CUSTOMER=null,AUTO=false,seq=0,nameT=0;
 const LEN={996:9,7:10},PH={996:'555 123 456',7:'900 123 45 67'};
@@ -423,26 +506,63 @@ $('#regform').addEventListener('submit',e=>{
   if(!okName(fn)){$('#fnh').textContent='Укажите имя (только буквы)';bad=true}
   if(!okName(ln)){$('#lnh').textContent='Укажите фамилию (только буквы)';bad=true}
   if(bad){const f=document.querySelector('.hint.err:not(:empty)');if(f)f.scrollIntoView({block:'center',behavior:'smooth'});return}
-  /* TODO этап 2: POST {API_URL}/api/go/register -> {id, token, inBase} */
-  const u={id:CUSTOMER?CUSTOMER.id:'new-'+Date.now(),phone:'+'+CC+d,first:fn,last:ln,mid:mn,inBase:!!CUSTOMER};
+  const existing=LS.get('po_go_user');
+  if(existing&&existing.id){
+    if(existing.phone==='+'+CC+d){enterApp(existing,false);toast('Бул түзмөктө аккаунт мурунтан катталган.');return}
+    toast('Экинчи аккаунт ачууга болбойт. Өзгөртүү үчүн PAR ORDO Поддержка кызматына кайрылыңыз.');
+    $('#profile').hidden=false;$('#home').hidden=true;$('#visits').hidden=true;
+    document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x.dataset.t==='profile'));
+    renderProfile(existing);return;
+  }
+  /* Worker кошулганда телефон номери бардык түзмөктөрдө сервер аркылуу текшерилет. */
+  const u={id:'local-'+Date.now(),phone:'+'+CC+d,first:fn,last:ln,mid:mn,inBase:false};
   LS.set('po_go_user',u);enterApp(u,true);
 });
 
 function enterApp(u,fresh){
   ME.id=u.id;ME.name=u.first+' '+(u.last?u.last[0]+'.':'');
   $('#hello').textContent=ME.name;
-  document.body.classList.remove('noauth');$('#reg').hidden=true;$('#home').hidden=false;$('#visits').hidden=true;
+  document.body.classList.remove('noauth');$('#reg').hidden=true;$('#home').hidden=false;$('#visits').hidden=true;$('#profile').hidden=true;
   document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x.dataset.t==='home'));
-  scrollTo(0,0);tilt();
-  if(fresh)toast(u.inBase?'Вы есть в базе клиентов ПАР ОРДО':'Добро пожаловать в ПАР ОРДО!');
+  renderProfile(u);scrollTo(0,0);tilt();
+  if(fresh)toast('Добро пожаловать в ПАР ОРДО!');
 }
-$('#logout').onclick=()=>{LS.del('po_go_user');CUSTOMER=null;AUTO=false;$('#regform').reset();hideFound();CC='996';
-  document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-checked',x.dataset.cc==='996'));$('#pre').textContent='+996';$('#ph').placeholder=PH[996];
-  document.body.classList.add('noauth');$('#home').hidden=true;$('#visits').hidden=true;$('#reg').hidden=false;scrollTo(0,0)};
+
+$('#supportRequestForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const u=LS.get('po_go_user'),reason=$('#supportReason').value.trim();
+  if(!u){toast('Аккаунт табылган жок.');return}
+  if(reason.length<12){$('#supportState').textContent='Себебин кеминде 12 белги менен түшүндүрүңүз.';return}
+  LS.set('po_go_account_request',{customerId:u.id,phone:u.phone,reason,createdAt:new Date().toISOString(),status:'draft-awaiting-worker'});
+  $('#supportState').textContent='Өтүнүч түзмөктө сакталды. Ал азырынча колдоо кызматына жөнөтүлгөн жок; Worker кошулганда жөнөтүү иштетилет.';
+  toast('Өзгөртүү өтүнүчүнүн черновиги сакталды.');
+});
+$('#notifyBtn').onclick=async()=>{
+  if(!('Notification' in window)){$('#notifyState').textContent='Бул браузер билдирмелерди колдобойт.';return}
+  try{
+    const permission=await Notification.requestPermission();
+    $('#notifyState').textContent=permission==='granted'
+      ?'Билдирмелерге уруксат берилди. Автоматтык push билдирмелер Worker менен кошулат.'
+      :'Билдирмелерге уруксат берилген жок.';
+    if(permission==='granted')new Notification('PAR ORDO GO',{body:'Бул түзмөктөгү билдирмелер күйгүзүлдү.'});
+  }catch(e){$('#notifyState').textContent='Билдирмелерди күйгүзүү мүмкүн болгон жок.'}
+};
 (function(){const u=LS.get('po_go_user');
   if(u&&u.first){enterApp(u,false)}
   else{document.body.classList.add('noauth');$('#reg').hidden=false;$('#home').hidden=true}})();
 
+let installPromptEvent=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPromptEvent=e;});
+$('#installPwaBtn').onclick=async()=>{
+  if(installPromptEvent){
+    installPromptEvent.prompt();
+    try{const choice=await installPromptEvent.userChoice;if(choice&&choice.outcome==='accepted')toast('Установка PAR ORDO GO началась.')}catch(e){}
+    installPromptEvent=null;return;
+  }
+  toast('Меню браузера → «Установить приложение» или «Добавить на главный экран».');
+};
+$('#apkBtn').onclick=()=>toast('APK-файл пока не собран. Он появится после отдельной Android-сборки.');
+window.addEventListener('appinstalled',()=>toast('PAR ORDO GO установлен на устройство.'));
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
