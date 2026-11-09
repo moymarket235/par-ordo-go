@@ -1,0 +1,58 @@
+/* PAR ORDO GO — Minimal bottom navigation V3.
+   Load AFTER Royal UI V1 and Royal Icons V2.
+   Visual-only; existing navigation and click handlers are unchanged. */
+nav[role="tablist"] {
+  width: min(448px, 100%) !important;
+  bottom: 0 !important;
+  padding: 9px 14px calc(10px + env(safe-area-inset-bottom)) !important;
+  gap: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: linear-gradient(to bottom, rgba(8, 10, 8, .02), rgba(8, 12, 10, .91) 35%, rgba(8, 12, 10, .98)) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+nav[role="tablist"] button[role="tab"],
+nav[role="tablist"] button[role="tab"][aria-selected="true"] {
+  position: relative !important;
+  min-height: 59px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 6px 2px 9px !important;
+  gap: 5px !important;
+  color: #c9bca8 !important;
+  text-shadow: none !important;
+}
+nav[role="tablist"] button[role="tab"]::before,
+nav[role="tablist"] button[role="tab"][aria-selected="true"]::before {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: currentColor !important;
+}
+nav[role="tablist"] button[role="tab"][aria-selected="true"] {
+  color: #f4cb80 !important;
+}
+nav[role="tablist"] button[role="tab"][aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #d6a14d, #ffe2a2, #d6a14d);
+  box-shadow: 0 0 11px rgba(245, 193, 98, .45);
+}
+nav[role="tablist"] button[role="tab"]:focus-visible {
+  outline: 2px solid #f4cb80 !important;
+  outline-offset: -2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  nav[role="tablist"] button[role="tab"] { transition: none !important; }
+}
