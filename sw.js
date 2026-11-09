@@ -1,4 +1,4 @@
-const CACHE='po-go-v13';
+const CACHE='po-go-v14';
 const SHELL=['./','./index.html','./manifest.webmanifest','./assets/par-ordo-logo.png','./assets/bg-banya.jpg'];
 async function cacheOk(cache,request,response){
   if(response && response.ok && response.type!=='opaque'){

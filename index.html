@@ -196,6 +196,56 @@ body.noauth nav{display:none}
 .install-foot{grid-area:foot;margin-top:0;font-size:10px;line-height:1.35;color:var(--mist);opacity:.7}
 @media(max-width:360px){.install-panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "copy" "actions" "foot";row-gap:8px}.install-head{align-items:center}.install-actions{grid-template-columns:1fr 1fr}.install-action{min-height:42px;font-size:11px}}
 
+
+/* Compact horizontal install banner — only this panel is adjusted */
+.install-panel{
+  padding:12px 14px !important;
+  margin:12px 0 !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  grid-template-areas:"head" "actions" !important;
+  gap:8px !important;
+  align-items:center !important;
+}
+.install-head{
+  grid-area:head !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  flex-wrap:nowrap !important;
+  gap:10px !important;
+  min-width:0 !important;
+}
+.install-head h2{
+  font-size:15px !important;
+  line-height:1.15 !important;
+  white-space:nowrap !important;
+}
+.install-tag{font-size:9px !important;padding:3px 6px !important}
+.install-copy,.install-foot{display:none !important}
+.install-actions{
+  grid-area:actions !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  gap:8px !important;
+  width:100% !important;
+  margin:0 !important;
+}
+.install-action{
+  min-height:40px !important;
+  padding:8px 6px !important;
+  border-radius:12px !important;
+  font-size:11px !important;
+  line-height:1.15 !important;
+  white-space:nowrap !important;
+}
+@media(max-width:360px){
+  .install-panel{grid-template-columns:minmax(0,1fr) !important;grid-template-areas:"head" "actions" !important;gap:7px !important}
+  .install-head h2{font-size:14px !important}
+  .install-tag{font-size:8px !important}
+  .install-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important}
+  .install-action{font-size:10px !important;min-height:38px !important}
+}
 </style>
 </head>
 <body>
