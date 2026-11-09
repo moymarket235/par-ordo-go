@@ -127,6 +127,34 @@ h1{font-size:clamp(24px,7vw,30px);overflow-wrap:anywhere}
 .orb{width:clamp(104px,16svh,132px);height:clamp(104px,16svh,132px)}
 .top,.sub,h1{text-shadow:0 1px 12px rgba(0,0,0,.85)}
 body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 30%,rgba(10,8,7,.3) 62%,rgba(10,8,7,.72) 100%)}
+/* registration */
+.formcard{padding:20px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:18px}
+.field,.found,.cta{min-width:0}
+.field{display:grid;gap:7px}
+.lbl{font-size:13.5px;font-weight:600;color:var(--mist)}
+.lbl i{font-style:normal;font-weight:400;opacity:.65;margin-left:6px}
+.field input,.phone{width:100%;min-height:50px;border-radius:14px;border:1px solid rgba(255,214,160,.22);background:rgba(10,7,4,.6);color:var(--ink);font:500 17px system-ui,-apple-system,sans-serif;padding:0 14px}
+.field input:focus,.phone:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,185,90,.22);outline:none}
+.phone{display:flex;align-items:center;gap:10px}
+.phone input{border:0;background:none;box-shadow:none!important;padding:0;min-height:48px;flex:1;min-width:0;width:auto}
+#pre{color:var(--gold);font-weight:700;white-space:nowrap}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{padding:10px 8px;border-radius:14px;border:1px solid rgba(255,214,160,.2);background:rgba(10,7,4,.45);text-align:center;display:grid;gap:2px}
+.seg b{font-size:18px}.seg small{font-size:11.5px;opacity:.75;line-height:1.25}
+.seg button[aria-checked=true]{border-color:var(--gold);background:linear-gradient(135deg,rgba(240,185,90,.24),rgba(255,122,46,.14));color:var(--gold)}
+.hint{font-size:12.5px;line-height:1.4;color:var(--mist);opacity:.85}
+.hint:empty{display:none}
+.err{color:#ff9d8a;opacity:1}
+.found{border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;border:1px solid rgba(120,220,150,.45);background:rgba(40,120,70,.25)}
+.found b{display:block;color:#9be8b4;margin-bottom:2px}
+.found.maybe{border-color:rgba(240,185,90,.5);background:rgba(240,185,90,.13)}
+.found.maybe b{color:var(--gold)}
+.cta{min-height:54px;border-radius:16px;background:linear-gradient(135deg,#f0c56d,var(--ember));color:#1a1206;font:700 17px Georgia,serif;box-shadow:0 14px 36px -14px rgba(255,138,61,.8)}
+.cta:disabled{opacity:.55}
+.linkbtn{display:block;margin:6px auto 0;color:var(--mist);opacity:.7;font-size:13.5px;padding:10px;text-decoration:underline}
+body.noauth nav{display:none}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translate(-50%,-30px);opacity:0;z-index:60;padding:10px 16px;border-radius:14px;background:rgba(36,110,64,.95);color:#eaffef;font-size:14px;text-align:center;max-width:90vw;transition:opacity .4s,transform .4s;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
 /* qr modal */
 #modal{position:fixed;inset:0;z-index:40;background:rgba(5,12,8,.78);display:none;place-items:center;padding:20px}
 #modal.open{display:grid}
@@ -153,6 +181,27 @@ body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 
 </div>
 
 <main>
+  <section id="reg" hidden>
+    <div class="top"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.display='none'"><b>ПАР ОРДО</b><span>GO</span><em class="chip">демо</em></div>
+    <h1>Регистрация</h1>
+    <p class="sub">Создайте профиль, чтобы копить бонусы и видеть свои посещения</p>
+    <form id="regform" class="glass formcard" novalidate autocomplete="on">
+      <div class="field"><span class="lbl">Код страны</span>
+        <div class="seg" role="radiogroup" aria-label="Код страны">
+          <button type="button" role="radio" aria-checked="true" data-cc="996"><b>+996</b><small>Кыргызстан</small></button>
+          <button type="button" role="radio" aria-checked="false" data-cc="7"><b>+7</b><small>Россия · Казахстан</small></button>
+        </div></div>
+      <div class="field"><label class="lbl" for="ph">Номер телефона</label>
+        <div class="phone"><span id="pre">+996</span><input id="ph" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="555 123 456"></div>
+        <p class="hint err" id="phh"></p></div>
+      <div id="found" class="found" role="status" hidden></div>
+      <div class="field"><label class="lbl" for="fn">Имя</label><input id="fn" autocomplete="given-name" placeholder="Например, Айбек"><p class="hint err" id="fnh"></p></div>
+      <div class="field"><label class="lbl" for="ln">Фамилия</label><input id="ln" autocomplete="family-name" placeholder="Например, Нурланов"><p class="hint err" id="lnh"></p></div>
+      <div class="field"><label class="lbl" for="mn">Отчество <i>необязательно</i></label><input id="mn" autocomplete="additional-name" placeholder="Например, Эркинович"></div>
+      <button type="submit" class="cta" id="regbtn">Продолжить</button>
+    </form>
+  </section>
+
   <section id="home">
     <div class="top"><img src="assets/par-ordo-logo.png" alt="" onerror="this.style.display='none'"><b>ПАР ОРДО</b><span>GO</span><em class="chip">демо</em></div>
     <p class="sub">Добро пожаловать</p>
@@ -172,6 +221,7 @@ body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 
       <div id="all"></div>
       <div class="total"><span class="sub">Потрачено всего</span><b id="tot"></b></div>
     </div>
+    <button class="linkbtn" id="logout">Сменить профиль</button>
   </section>
 </main>
 
@@ -180,6 +230,7 @@ body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 
   <button role="tab" aria-selected="false" data-t="visits">Посещения</button>
 </nav>
 
+<div id="toast" role="status"></div>
 <div id="modal" role="dialog" aria-modal="true" aria-label="QR для входа">
   <div class="sheet glass">
     <h2 style="font:600 20px Georgia,serif">Ваш QR-код</h2>
@@ -239,7 +290,7 @@ addEventListener('error',()=>{const i=$('#intro');if(i){i.remove();document.body
 })();
 
 /* ===== home ===== */
-$('#hello').textContent=ME.name;
+/* greeting is set in enterApp() */
 const dots=$('#dots'),C=2*Math.PI*64,fr=BONUS.count/BONUS.need;
 dots.innerHTML=`<svg viewBox="0 0 160 160" width="200" height="200" role="img" aria-label="${BONUS.count} из ${BONUS.need} визитов"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c56d"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><circle cx="80" cy="80" r="64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/><circle id="arc" cx="80" cy="80" r="64" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .8s;filter:drop-shadow(0 0 8px rgba(255,138,61,.7))"/><text x="80" y="84" text-anchor="middle" font-family="Georgia,serif" font-size="40" font-weight="700" fill="#f3efe3">${BONUS.count}/${BONUS.need}</text><text x="80" y="106" text-anchor="middle" font-size="13" fill="#e8d9c0">визитов</text></svg>`;
 requestAnimationFrame(()=>requestAnimationFrame(()=>{$('#arc').style.strokeDashoffset=C*(1-fr)}));
@@ -300,6 +351,97 @@ let tk=0;deck.addEventListener('scroll',()=>{if(!tk)tk=requestAnimationFrame(()=
         g.fillStyle=`rgba(${p.c},.55)`;g.beginPath();g.arc(p.x+Math.sin(t/1500+p.w)*14,p.y,p.r,0,6.283);g.fill()}}
     requestAnimationFrame(f)})(0);
 })();
+
+/* ===== registration ===== */
+const API_URL=''; /* TODO этап 2: адрес Cloudflare Worker, напр. https://par-ordo-api.xxx.workers.dev */
+const DEMO_BASE=[
+  {id:'c-101',phone:'+996555123456',last:'Нурланов',first:'Айбек',mid:'Эркинович'},
+  {id:'c-102',phone:'+77011234567',last:'Иванов',first:'Сергей',mid:''}
+];
+const maskPhone=p=>{const cc=p.startsWith('+996')?'+996':'+7',n=p.slice(cc.length);return cc+' '+n.slice(0,3)+' ••• '+n.slice(-3)};
+async function lookup(q){
+  if(API_URL){
+    try{const r=await fetch(API_URL+'/api/go/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});if(r.ok)return await r.json()}catch(e){}
+    return{match:null};
+  }
+  const n=x=>(x||'').trim().toLowerCase();
+  if(q.phone){const c=DEMO_BASE.find(c=>c.phone===q.phone);if(c)return{match:'phone',customer:c}}
+  if(q.first&&q.last){const c=DEMO_BASE.find(c=>n(c.first)===n(q.first)&&n(c.last)===n(q.last));if(c)return{match:'name',hint:maskPhone(c.phone)}}
+  return{match:null};
+}
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const cap=t=>t.trim().replace(/\s+/g,' ').replace(/^\p{L}/u,c=>c.toUpperCase());
+let CC='996',CUSTOMER=null,AUTO=false,seq=0,nameT=0;
+const LEN={996:9,7:10},PH={996:'555 123 456',7:'900 123 45 67'};
+const digits=v=>{let d=v.replace(/\D/g,'');
+  if(CC==='996'){if(d.length>=12&&d.startsWith('996'))d=d.slice(3);if(d.length===10&&d[0]==='0')d=d.slice(1)}
+  else if(d.length>=11&&(d[0]==='7'||d[0]==='8'))d=d.slice(1);
+  return d.slice(0,LEN[CC])};
+const fmt=d=>(CC==='996'?[d.slice(0,3),d.slice(3,6),d.slice(6,9)]:[d.slice(0,3),d.slice(3,6),d.slice(6,8),d.slice(8,10)]).filter(Boolean).join(' ');
+const showFound=(html,maybe)=>{const f=$('#found');f.className='found'+(maybe?' maybe':'');f.innerHTML=html;f.hidden=false};
+const hideFound=()=>{$('#found').hidden=true};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3600)};
+function clearAuto(){if(AUTO){$('#fn').value=$('#ln').value=$('#mn').value='';AUTO=false}CUSTOMER=null;hideFound()}
+
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+  CC=b.dataset.cc;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-checked',x===b));
+  $('#pre').textContent='+'+CC;$('#ph').placeholder=PH[CC];$('#ph').value='';$('#phh').textContent='';clearAuto()});
+
+$('#ph').addEventListener('input',async()=>{
+  const ph=$('#ph'),d=digits(ph.value);ph.value=fmt(d);$('#phh').textContent='';
+  if(d.length<LEN[CC]){clearAuto();return}
+  const my=++seq,res=await lookup({phone:'+'+CC+d});
+  if(my!==seq)return;
+  if(res.match==='phone'&&res.customer){
+    const c=res.customer;CUSTOMER=c;AUTO=true;
+    $('#fn').value=c.first||'';$('#ln').value=c.last||'';$('#mn').value=c.mid||'';
+    ['#fnh','#lnh'].forEach(i=>$(i).textContent='');
+    showFound('<b>Вы есть в базе клиентов ПАР ОРДО</b>Имя и фамилия заполнены автоматически. Проверьте данные и продолжайте.');
+  }else clearAuto();
+});
+
+function nameCheck(){
+  clearTimeout(nameT);
+  nameT=setTimeout(async()=>{
+    if(CUSTOMER)return;
+    const first=$('#fn').value.trim(),last=$('#ln').value.trim();
+    if(first.length<2||last.length<2)return;
+    const res=await lookup({first,last});
+    if(CUSTOMER)return;
+    if(res.match==='name')showFound('<b>Вы уже есть в базе клиентов?</b>Найден клиент с таким именем: тел. '+res.hint+'. Введите свой номер полностью, и профиль подтянется.',true);
+    else if($('#found').classList.contains('maybe'))hideFound();
+  },450);
+}
+['#fn','#ln'].forEach(i=>$(i).addEventListener('input',()=>{AUTO=false;$(i+'h').textContent='';nameCheck()}));
+
+$('#regform').addEventListener('submit',e=>{
+  e.preventDefault();
+  const d=digits($('#ph').value),fn=cap($('#fn').value),ln=cap($('#ln').value),mn=cap($('#mn').value);
+  const okName=v=>v.length>=2&&/^[\p{L}\s'\-.]+$/u.test(v);
+  let bad=false;
+  if(d.length!==LEN[CC]){$('#phh').textContent='Введите номер полностью: '+LEN[CC]+' цифр';bad=true}
+  if(!okName(fn)){$('#fnh').textContent='Укажите имя (только буквы)';bad=true}
+  if(!okName(ln)){$('#lnh').textContent='Укажите фамилию (только буквы)';bad=true}
+  if(bad){const f=document.querySelector('.hint.err:not(:empty)');if(f)f.scrollIntoView({block:'center',behavior:'smooth'});return}
+  /* TODO этап 2: POST {API_URL}/api/go/register -> {id, token, inBase} */
+  const u={id:CUSTOMER?CUSTOMER.id:'new-'+Date.now(),phone:'+'+CC+d,first:fn,last:ln,mid:mn,inBase:!!CUSTOMER};
+  LS.set('po_go_user',u);enterApp(u,true);
+});
+
+function enterApp(u,fresh){
+  ME.id=u.id;ME.name=u.first+' '+(u.last?u.last[0]+'.':'');
+  $('#hello').textContent=ME.name;
+  document.body.classList.remove('noauth');$('#reg').hidden=true;$('#home').hidden=false;$('#visits').hidden=true;
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x.dataset.t==='home'));
+  scrollTo(0,0);tilt();
+  if(fresh)toast(u.inBase?'Вы есть в базе клиентов ПАР ОРДО':'Добро пожаловать в ПАР ОРДО!');
+}
+$('#logout').onclick=()=>{LS.del('po_go_user');CUSTOMER=null;AUTO=false;$('#regform').reset();hideFound();CC='996';
+  document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-checked',x.dataset.cc==='996'));$('#pre').textContent='+996';$('#ph').placeholder=PH[996];
+  document.body.classList.add('noauth');$('#home').hidden=true;$('#visits').hidden=true;$('#reg').hidden=false;scrollTo(0,0)};
+(function(){const u=LS.get('po_go_user');
+  if(u&&u.first){enterApp(u,false)}
+  else{document.body.classList.add('noauth');$('#reg').hidden=false;$('#home').hidden=true}})();
 
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
