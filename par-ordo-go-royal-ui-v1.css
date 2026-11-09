@@ -1,0 +1,325 @@
+/* PAR ORDO GO — ROYAL NAVIGATION + PROFILE UI V1
+   Visual-only layer. Does not change QR, account, visits, API, or push logic. */
+
+:root {
+  --po-royal-gold: #f0c875;
+  --po-royal-gold-soft: #d8b06d;
+  --po-royal-ink: #110d08;
+  --po-royal-green: #9ce7b6;
+}
+
+/* Give the fixed navigation enough room without covering page content. */
+main {
+  padding-bottom: calc(124px + env(safe-area-inset-bottom)) !important;
+}
+
+/* Premium floating bottom navigation */
+nav[role="tablist"] {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  width: min(448px, calc(100% - 26px)) !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  gap: 7px !important;
+  padding: 8px !important;
+  border: 1px solid rgba(230, 188, 111, .48) !important;
+  border-radius: 23px !important;
+  background:
+    radial-gradient(120% 130% at 50% 0%, rgba(227, 177, 91, .15), transparent 58%),
+    linear-gradient(145deg, rgba(33, 24, 14, .97), rgba(7, 13, 10, .97)) !important;
+  box-shadow:
+    0 14px 42px rgba(0, 0, 0, .48),
+    inset 0 1px 0 rgba(255, 239, 203, .13),
+    0 0 24px rgba(224, 171, 83, .09) !important;
+  backdrop-filter: blur(16px) saturate(1.15) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.15) !important;
+  z-index: 35 !important;
+}
+
+nav[role="tablist"] button[role="tab"] {
+  min-width: 0 !important;
+  min-height: 61px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 7px 3px 6px !important;
+  border: 1px solid transparent !important;
+  border-radius: 16px !important;
+  background: transparent !important;
+  color: rgba(231, 218, 194, .76) !important;
+  font-size: clamp(10px, 2.8vw, 12px) !important;
+  line-height: 1.1 !important;
+  font-weight: 750 !important;
+  letter-spacing: .015em !important;
+  white-space: nowrap !important;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+nav[role="tablist"] button[role="tab"]::before {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 10px;
+  color: #d8bd8d;
+  background: rgba(240, 200, 117, .065);
+  border: 1px solid rgba(240, 200, 117, .12);
+  font-family: Georgia, serif;
+  font-size: 21px;
+  line-height: 1;
+  transition: inherit;
+}
+
+nav[role="tablist"] button[data-t="home"]::before { content: "⌂"; }
+nav[role="tablist"] button[data-t="visits"]::before { content: "◷"; font-size: 20px; }
+nav[role="tablist"] button[data-t="profile"]::before { content: "♙"; font-size: 19px; }
+
+nav[role="tablist"] button[aria-selected="true"] {
+  color: #ffe6ad !important;
+  border-color: rgba(242, 197, 112, .62) !important;
+  background:
+    radial-gradient(100% 120% at 50% 0%, rgba(255, 222, 153, .18), transparent 75%),
+    linear-gradient(145deg, rgba(127, 83, 31, .43), rgba(49, 31, 14, .78)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 241, 211, .16),
+    0 0 18px rgba(229, 174, 82, .15) !important;
+}
+
+nav[role="tablist"] button[aria-selected="true"]::before {
+  color: #fff0c7;
+  border-color: rgba(255, 224, 160, .65);
+  background: linear-gradient(145deg, rgba(222, 172, 91, .42), rgba(95, 61, 25, .38));
+  box-shadow: 0 0 15px rgba(244, 194, 102, .19);
+}
+
+nav[role="tablist"] button:active { transform: scale(.965) !important; }
+
+/* Profile page heading */
+#profile {
+  padding-top: 8px;
+  animation: poProfileEnter .28s ease both;
+}
+
+#profile > h1 {
+  margin: 7px 0 5px !important;
+  color: #fff0d1;
+  font: 800 clamp(27px, 7vw, 34px)/1.08 Georgia, "Iowan Old Style", serif !important;
+  letter-spacing: -.025em;
+  text-shadow: 0 3px 20px rgba(230, 176, 91, .16);
+}
+
+#profile > h1::before {
+  content: "PAR ORDO GO  ·  PERSONAL CABINET";
+  display: block;
+  margin-bottom: 8px;
+  color: #e5c27e;
+  font: 900 9px/1.3 system-ui, sans-serif;
+  letter-spacing: .19em;
+}
+
+#profile > .sub {
+  margin-bottom: 18px;
+  color: #d6c4a3;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Profile cards — consistent luxury glass, stronger hierarchy */
+#profile .support-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 19px 17px !important;
+  margin: 13px 0 !important;
+  border: 1px solid rgba(220, 177, 103, .34) !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(120% 100% at 100% 0%, rgba(217, 161, 76, .11), transparent 57%),
+    linear-gradient(155deg, rgba(35, 27, 17, .94), rgba(9, 17, 12, .96)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 239, 207, .09),
+    0 15px 35px rgba(0, 0, 0, .20) !important;
+}
+
+#profile .support-card::after {
+  content: "";
+  position: absolute;
+  right: -55px;
+  top: -60px;
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  border: 1px solid rgba(228, 184, 107, .08);
+  box-shadow: 0 0 0 12px rgba(228,184,107,.018), 0 0 0 27px rgba(228,184,107,.012);
+  pointer-events: none;
+  z-index: -1;
+}
+
+#profile .support-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 13px !important;
+  color: #ffdfa0;
+  font-size: 16px !important;
+  line-height: 1.25;
+  font-weight: 850 !important;
+  letter-spacing: .005em;
+}
+
+#profile .support-card h2::before {
+  content: "✦";
+  display: grid;
+  place-items: center;
+  flex: 0 0 29px;
+  width: 29px;
+  height: 29px;
+  border: 1px solid rgba(239, 195, 111, .33);
+  border-radius: 10px;
+  background: rgba(214, 164, 82, .10);
+  color: #f1cc83;
+  font-size: 15px;
+}
+
+/* Account data rows */
+#profile .profile-kv {
+  display: grid;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+#profile .profile-kv > div {
+  display: grid;
+  grid-template-columns: minmax(88px, .78fr) minmax(0, 1.22fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 11px;
+  border: 1px solid rgba(224, 190, 132, .13);
+  border-radius: 13px;
+  background: linear-gradient(100deg, rgba(255, 255, 255, .035), rgba(0, 0, 0, .12));
+  font-size: 12px;
+}
+
+#profile .profile-kv > div:first-child {
+  min-height: 62px;
+  border-color: rgba(231, 190, 112, .34);
+  background: linear-gradient(105deg, rgba(205, 151, 65, .13), rgba(11, 15, 10, .18));
+}
+
+#profile .profile-kv span {
+  color: #c5b391;
+  opacity: .95;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+#profile .profile-kv b {
+  color: #fff0d0;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+#profile #profileName { font: 800 19px/1.2 Georgia, serif; color: #ffe0a0; }
+#profile #profilePhone { color: #e6d9bf; letter-spacing: .025em; }
+#profile #profileId { color: #d4bd8f; font-variant-numeric: tabular-nums; }
+#profile #profileBaseStatus {
+  display: inline-block;
+  justify-self: end;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid rgba(128, 214, 156, .28);
+  border-radius: 9px;
+  background: rgba(43, 115, 67, .16);
+  color: #a8edbd;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+#profile .support-card > p {
+  margin-top: 13px !important;
+  color: #c8b99e;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* Support form */
+#profile #supportRequestForm { margin-top: 13px; }
+#profile #supportRequestForm .lbl {
+  display: block;
+  margin-bottom: 7px;
+  color: #e1c58d;
+  font-size: 11px;
+  font-weight: 800;
+}
+#profile .support-card textarea {
+  min-height: 112px;
+  margin: 0 0 12px !important;
+  padding: 13px !important;
+  border: 1px solid rgba(225, 184, 111, .26) !important;
+  border-radius: 15px !important;
+  background: rgba(5, 11, 8, .78) !important;
+  color: #fff0d3 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+#profile .support-card textarea::placeholder { color: #9b8b70; }
+#profile .support-card textarea:focus {
+  border-color: rgba(242, 199, 119, .78) !important;
+  box-shadow: 0 0 0 3px rgba(231, 180, 91, .13), 0 0 20px rgba(231, 180, 91, .08) !important;
+}
+
+#profile .support-card .cta,
+#profile #notifyBtn {
+  min-height: 48px !important;
+  border: 1px solid rgba(255, 225, 165, .58) !important;
+  border-radius: 15px !important;
+  background: linear-gradient(110deg, #f3d58e 0%, #e9ad54 55%, #f47e3d 100%) !important;
+  color: #211407 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 9px 25px rgba(216, 133, 45, .20), inset 0 1px 0 rgba(255,255,255,.48) !important;
+  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease !important;
+}
+#profile .support-card .cta:active,
+#profile #notifyBtn:active { transform: scale(.985); filter: brightness(.96); }
+
+#profile .status-line {
+  padding: 10px 11px;
+  border: 1px solid rgba(221, 183, 115, .17);
+  border-radius: 12px;
+  background: rgba(5, 12, 8, .38);
+  color: #d9c69e;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+#profile #notifyBtn::before { content: "♧"; margin-right: 8px; font-size: 16px; }
+
+@keyframes poProfileEnter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 380px) {
+  nav[role="tablist"] { width: calc(100% - 18px) !important; padding: 6px !important; gap: 5px !important; }
+  nav[role="tablist"] button[role="tab"] { min-height: 57px !important; font-size: 10px !important; }
+  #profile .support-card { padding: 16px 13px !important; }
+  #profile .profile-kv > div { grid-template-columns: minmax(74px, .72fr) minmax(0, 1.28fr); padding: 9px; }
+  #profile #profileName { font-size: 17px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #profile { animation: none; }
+  nav[role="tablist"] button[role="tab"] { transition: none !important; }
+}
