@@ -253,6 +253,7 @@ body.noauth nav{display:none}
 <link rel="stylesheet" href="./par-ordo-go-nav-clean-v5.css?v=8">
 <link rel="stylesheet" href="./par-ordo-go-nav-final-v8.css?v=8">
 <link rel="stylesheet" href="./par-ordo-go-door-v1.css?v=3">
+<link rel="stylesheet" href="./par-ordo-go-bonus-v1.css?v=1">
 </head>
 <body>
 <div id="scene"></div>
@@ -303,7 +304,7 @@ body.noauth nav{display:none}
     <div id="deckStage" class="deck-stage">
     <div id="deck" role="group" aria-roledescription="карусель" aria-label="Карточки PAR ORDO" tabindex="0">
       <article class="slab glass"><div class="orb"><img src="./assets/par-ordo-logo.webp" alt="ПАР ОРДО" loading="eager" decoding="async"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><svg class="ic ic-qr" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.500"/><rect x="14" y="3" width="7" height="7" rx="1.500"/><rect x="3" y="14" width="7" height="7" rx="1.500"/></g><path fill="currentColor" d="M5.500 5.500h2v2h-2zM16.500 5.500h2v2h-2zM5.500 16.500h2v2h-2zM13 13h3.500v3H13zM18 13h3v3h-3zM16 17h3v2h2v2h-5zM13 18h2v3h-2z"/></svg><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
-      <article class="slab glass"><h2>Бонус: 5-й вход бесплатно</h2><div class="dots" id="dots"></div><p class="note" id="bnote"></p></article>
+      <article class="slab glass bn-slab"><h2>Бонус 3%</h2><div class="dots" id="dots"></div><div class="bn-stats" id="bstats" aria-live="polite"></div><p class="note" id="bnote"></p></article>
       <article class="slab glass"><h2>Последние посещения</h2><div id="last"></div><div class="total"><span class="sub">Потрачено всего</span><b id="tot2"></b></div></article>
     </div>
     <div id="pager"><i class="on"></i><i></i><i></i></div>
@@ -316,6 +317,7 @@ body.noauth nav{display:none}
     <div class="card glass" style="margin-top:18px">
       <div id="all"></div>
       <div class="total"><span class="sub">Потрачено всего</span><b id="tot"></b></div>
+      <div class="total bn-total"><span class="sub">Бонусный счёт · 3%</span><b id="btot"></b></div>
     </div>
   </section>
 
@@ -372,7 +374,12 @@ body.noauth nav{display:none}
 /* ===== Customer data: production values are loaded from Cloudflare Worker ===== */
 const ME={id:'',name:''};
 const VISITS=[]; // PAR ORDO PRO Worker is the single source of truth for visit history.
-const BONUS={active:true,count:VISITS.length,need:5};
+/* Бонус 3% — как в PAR ORDO PRO: 3% с любой суммы завершённых визитов копятся на бонусный счёт.
+   Списание делает сотрудник на браслете в PRO: позиция приходит с меткой «Чай · бонус 45» (или полем bonusPaid).
+   Доступно = накоплено − использовано. Если Worker пришлёт готовые цифры (data.bonus.available
+   или data.bonusBalance), берём их. */
+const BONUS={active:true,count:VISITS.length,need:5,rate:.03,server:null,loaded:false,failed:false};
+const BONUS_MARK=/\s*·\s*бонус\s+(\d+)\s*$/u;
 const $=s=>document.querySelector(s), money=n=>n.toLocaleString('ru-RU')+' сом';
 
 addEventListener('error',()=>{const i=$('#intro');if(i){i.remove();document.body.classList.add('ready');document.body.classList.remove('door-wait')}});
@@ -393,23 +400,81 @@ document.querySelectorAll('img[src*=' + JSON.stringify('par-ordo-logo.webp') + '
 /* ===== home / visits: live data from PAR ORDO PRO Worker ===== */
 const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 const dots=$('#dots'),C=2*Math.PI*64;
+const num=n=>Math.round(Number(n)||0).toLocaleString('ru-RU');
+const bonusOfPurchase=p=>{
+  const f=Math.floor(Number(p&&p.bonusPaid));if(Number.isFinite(f)&&f>0)return f;
+  const m=String((p&&p.name)||'').match(BONUS_MARK);return m?(Number(m[1])||0):0;
+};
+const purchaseName=p=>String((p&&p.bonusBaseName)||'').trim()||String((p&&p.name)||'').replace(BONUS_MARK,'').trim()||'Товар';
+function bonusAccount(){
+  let spent=0,used=0,open=0;
+  for(const v of VISITS){
+    const s=Math.max(0,Number(v.sum||0));
+    if(v.status==='active')open+=s;else spent+=s;              // бонус за визит начисляется после его завершения
+    for(const p of (Array.isArray(v.purchases)?v.purchases:[]))used+=bonusOfPurchase(p);
+  }
+  const earned=Math.floor(spent*BONUS.rate),next=Math.floor(open*BONUS.rate),sv=BONUS.server;
+  if(sv&&typeof sv.available==='number'&&Number.isFinite(sv.available))
+    return{spent,earned:typeof sv.earned==='number'?sv.earned:earned,used:typeof sv.used==='number'?sv.used:used,available:Math.max(0,Math.floor(sv.available)),next};
+  return{spent,earned,used,available:Math.max(0,earned-used),next};
+}
+function bonusRise(a){
+  // the guest saw a smaller balance last time: count up and say why
+  if(!BONUS.loaded)return 0;
+  let prev=null,me='';
+  try{prev=JSON.parse(localStorage.getItem('po_go_bonus_seen'))}catch(e){}
+  try{me=(JSON.parse(localStorage.getItem('po_go_user'))||{}).id||''}catch(e){}
+  try{localStorage.setItem('po_go_bonus_seen',JSON.stringify({id:me,available:a.available,earned:a.earned}))}catch(e){}
+  if(!prev||prev.id!==me)return 0;
+  return Math.max(0,a.earned-Number(prev.earned||0));
+}
+function lastSeenBonus(){
+  try{const u=JSON.parse(localStorage.getItem('po_go_user'))||{},s=JSON.parse(localStorage.getItem('po_go_bonus_seen'));return s&&s.id===u.id&&typeof s.available==='number'?s:null}catch(e){return null}
+}
 function renderVisitSummary(){
-  const count=Math.max(0,Number(BONUS.count||0)),cycleProgress=count%BONUS.need;
-  const shownProgress=count>0&&cycleProgress===0?BONUS.need:cycleProgress;
-  const rewardReady=count>0&&cycleProgress===0,fr=shownProgress/BONUS.need;
-  dots.innerHTML=`<svg viewBox="0 0 160 160" width="200" height="200" role="img" aria-label="${shownProgress} из ${BONUS.need} визитов"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c56d"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><circle cx="80" cy="80" r="64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/><circle id="arc" cx="80" cy="80" r="64" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .8s;filter:drop-shadow(0 0 8px rgba(255,138,61,.7))"/><text x="80" y="84" text-anchor="middle" font-family="Georgia,serif" font-size="40" font-weight="700" fill="#f3efe3">${shownProgress}/${BONUS.need}</text><text x="80" y="106" text-anchor="middle" font-size="13" fill="#e8d9c0">визитов</text></svg>`;
+  let a=bonusAccount(),wait='';
+  if(!BONUS.loaded){
+    // no answer from the server yet: the last balance this phone saw, or a dash
+    const last=lastSeenBonus();
+    if(last)a={...a,available:Math.max(0,last.available),earned:Math.max(0,Number(last.earned)||0),used:Math.max(0,(Number(last.earned)||0)-last.available),next:0};
+    wait=BONUS.failed?(last?'Нет связи — показан последний известный бонус.':'Нет связи с сервером — бонус появится, когда связь восстановится.'):'Загружаем бонусный счёт…';
+    if(!last)a={...a,available:NaN};
+  }
+  const fr=a.earned>0&&a.available>0?Math.min(1,a.available/a.earned):0;
+  const big=Number.isNaN(a.available)?'—':num(a.available),fs=big.length<=3?44:big.length<=5?36:29;
+  dots.innerHTML=`<svg viewBox="0 0 160 160" width="200" height="200" role="img" aria-label="${big==='—'?'Бонусный счёт загружается':'Бонусный счёт: '+big+' сом'}"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0c56d"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><circle cx="80" cy="80" r="64" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/><circle id="arc" cx="80" cy="80" r="64" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) .8s;filter:drop-shadow(0 0 8px rgba(255,138,61,.7))"/><text id="bnum" x="80" y="${fs>=40?88:86}" text-anchor="middle" font-family="Georgia,serif" font-size="${fs}" font-weight="700" fill="#f3efe3">${big}</text><text x="80" y="110" text-anchor="middle" font-size="13" fill="#e8d9c0">сом бонуса</text></svg>`;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const arc=$('#arc');if(arc)arc.style.strokeDashoffset=C*(1-fr)}));
-  $('#bnote').textContent=rewardReady?'Пятый визит достигнут. Бесплатный бонус подлежит подтверждению правилами ПАР ОРДО.':`До бесплатного бонуса за 5-й визит осталось ${BONUS.need-shownProgress} визит(а). Счётчик связан с Базой клиентов.`;
+  $('#bstats').innerHTML=Number.isNaN(a.available)?'':`<span><b>${num(a.earned)}</b><small>накоплено</small></span><span><b>${num(a.used)}</b><small>использовано</small></span>`+(a.next?`<span class="up"><b>+${num(a.next)}</b><small>после визита</small></span>`:'');
+  $('#bnote').textContent=wait?wait:a.available>0
+    ?'Оплатите бонусом любой товар или вход — скажите администратору.'
+    :VISITS.length?'3% с каждой покупки копятся после завершения визита.':'3% с любой покупки — на ваш счёт. Покажите QR при входе.';
   const row=v=>{
-    const products=Array.isArray(v.purchases)?v.purchases.map(p=>`${esc(p.name||'Товар')} × ${Number(p.quantity||1)}`).join(' · '):'';
+    const ps=Array.isArray(v.purchases)?v.purchases:[];
+    const products=ps.map(p=>{const b=bonusOfPurchase(p);return `${esc(purchaseName(p))} × ${Number(p.quantity||1)}${b?` <em class="bn-paid">🎁<span class="bn-w"> бонусом</span> ${num(b)}</em>`:''}`}).join(' · ');
     const bracelet=esc(v.braceletNumber??'—'),date=esc(v.date||'Дата не указана'),sum=Number(v.sum||0);
-    return `<div class="visit"><div><b>Браслет №${bracelet}</b><small>${date}${v.status==='active'?' · Посещение активно':''}</small><div class="visit-purchases">${products||'Покупок нет'}</div></div><div class="sum">${money(sum)}</div></div>`;
+    const used=ps.reduce((s,p)=>s+bonusOfPurchase(p),0),gain=Math.floor(Math.max(0,sum)*BONUS.rate);
+    const chips=(v.status==='active'?(gain?`<i class="bn-chip wait">+${num(gain)} после визита</i>`:''):(gain?`<i class="bn-chip up">+${num(gain)} бонус</i>`:''))+(used?`<i class="bn-chip down">−${num(used)} бонусом</i>`:'');
+    return `<div class="visit"><div><b>Браслет №${bracelet}</b><small>${date}${v.status==='active'?' · Посещение активно':''}</small><div class="visit-purchases">${products||'Покупок нет'}</div></div><div class="sum">${money(sum)}${chips?`<span class="bn-chips">${chips}</span>`:''}</div></div>`;
   };
   $('#last').innerHTML=VISITS.length?VISITS.slice(0,2).map(row).join(''):'<div class="empty-history">Посещений пока нет. Когда сотрудник примет QR в PAR ORDO PRO, визит появится здесь.</div>';
   $('#all').innerHTML=VISITS.length?VISITS.map(row).join(''):'<div class="empty-history">История пока пуста. Здесь будут браслет, каждая покупка и сумма каждого визита.</div>';
   const totalSpent=VISITS.reduce((s,v)=>s+Number(v.sum||0),0);
   $('#tot').textContent=$('#tot2').textContent=money(totalSpent);
+  $('#btot').textContent=Number.isNaN(a.available)?'—':money(a.available);
+  const rise=bonusRise(a);
+  if(rise>0)bonusCelebrate(a.available,rise);
 }
+function bonusCelebrate(to,rise){
+  const el=$('#bnum'),slab=$('#deck .bn-slab'),still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  try{toast('+'+num(rise)+' сом бонуса за визит 🎁 На счёте: '+num(to)+' сом')}catch(e){}
+  setTimeout(()=>{try{const dot=document.querySelectorAll('#pager i')[1];if(!$('#home').hidden&&dot&&!dot.classList.contains('on'))dot.click()}catch(e){}},300);   // turn the deck to the card that just grew
+  if(!el||still)return;
+  const from=Math.max(0,to-rise),t0=performance.now(),D=1400;
+  const step=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);el.textContent=num(from+(to-from)*e);if(k<1)requestAnimationFrame(step)};
+  el.textContent=num(from);setTimeout(()=>requestAnimationFrame(step),700);
+  if(slab){const pop=document.createElement('b');pop.className='bn-pop';pop.setAttribute('aria-hidden','true');pop.textContent='+'+num(rise);$('#dots').append(pop);setTimeout(()=>pop.remove(),3200)}
+}
+window.PARORDOGoBonus={version:'1.0.0',rate:BONUS.rate,account:bonusAccount};
 let goRefreshBusy=false,lastGoRefreshAt=0;
 async function refreshGoAccount(force=false){
   const u=LS.get('po_go_user');if(!u?.token||goRefreshBusy)return;
@@ -421,10 +486,13 @@ async function refreshGoAccount(force=false){
     const next={...u,id:account.id||u.id,phone:account.phone||u.phone,first:account.first||u.first,last:account.last||u.last,mid:account.middle||u.mid||'',inBase:Boolean(account.inBase),verified:Boolean(account.verified)};
     LS.set('po_go_user',next);ME.id=next.id;ME.name=next.first+' '+(next.last?next.last[0]+'.':'');$('#hello').textContent=ME.name;renderProfile(next);
     VISITS.splice(0,VISITS.length,...(Array.isArray(data.visits)?data.visits:[]));
-    BONUS.count=Number(data.visitCount||0);renderVisitSummary();
+    BONUS.count=Number(data.visitCount||0);
+    BONUS.server=data.bonus&&typeof data.bonus==='object'&&typeof data.bonus.available==='number'?data.bonus
+      :(typeof data.bonusBalance==='number'?{available:data.bonusBalance}:null);
+    BONUS.loaded=true;BONUS.failed=false;renderVisitSummary();
   }catch(error){
     if(/сессия|session/i.test(error.message)){LS.del('po_go_user');toast('Сессия закончилась. Повторите регистрацию.');setTimeout(()=>location.reload(),700)}
-    else toast('PAR ORDO GO: '+error.message);
+    else{toast('PAR ORDO GO: '+error.message);if(!BONUS.loaded){BONUS.failed=true;renderVisitSummary()}}
   }finally{goRefreshBusy=false}
 }
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshGoAccount()});
