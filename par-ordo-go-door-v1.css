@@ -182,7 +182,7 @@ body.fit-2 #home .top::after{left:58px;top:38px}
 body.fit-2 #hello{font-size:25px;margin-bottom:5px}
 body.fit-2 .orb{width:104px!important;height:104px!important}
 body.fit-3 #installPanel .install-head{display:none!important}
-body.fit-4 #installPanel.install-panel{display:none!important}
+body.fit-4 #installPanel.install-panel{display:grid!important;padding:6px 10px!important;margin:5px 0!important;gap:5px!important;grid-template-areas:"head" "actions"!important}
 body.fit-4 #poSmartInvite .po-smart-invite-copy{height:48px}
 body.fit-4 #poSmartInvite .po-smart-invite-copy p{display:none}
 body.fit-4 .orb{width:78px!important;height:78px!important}
@@ -200,3 +200,16 @@ body[data-perf="1"] #arc,body[data-perf="0"] #arc{filter:none!important}
 #qrbtn b,#qrbtn span{min-width:0}
 @media (max-width:345px){#qrbtn{padding:8px 11px!important;column-gap:8px}#qrbtn .ic-qr{width:25px;height:25px}}
 body.fit-5 #poSmartInvite{display:none!important}
+
+/* PWA install controls must remain available on short screens. */
+body.fit-4 #installPanel .install-head{display:none!important}
+body.fit-4 #installPanel .install-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+body.fit-4 #installPanel .install-action{min-height:32px!important;padding:6px 4px!important;font-size:10px!important}
+body.fit-4 #installPanel.install-panel{visibility:visible!important;opacity:1!important}
+
+/* Compact install entry for first-time visitors on the registration screen. */
+.reg-install-panel.install-panel{padding:9px 12px!important;margin:12px 0!important;grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"head" "actions"!important;gap:7px!important}
+.reg-install-panel .install-head{justify-content:flex-start!important}
+.reg-install-panel .install-head h2{font-size:13px!important}
+.reg-install-panel .install-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+.reg-install-panel .install-action{min-height:36px!important;font-size:11px!important}

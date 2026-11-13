@@ -1,12 +1,35 @@
 {
+  "id": "./",
   "name": "ПАР ОРДО GO",
   "short_name": "ПАР ОРДО GO",
+  "description": "PAR ORDO GO — QR-вход, бонусы и история посещений.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait",
   "background_color": "#0a0807",
   "theme_color": "#0a0807",
+  "categories": [
+    "lifestyle",
+    "business"
+  ],
+  "prefer_related_applications": false,
   "icons": [
-    { "src": "assets/par-ordo-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    {
+      "src": "assets/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/par-ordo-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }

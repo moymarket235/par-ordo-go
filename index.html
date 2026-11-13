@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ПАР ОРДО GO</title>
 <meta name="theme-color" content="#0a0807">
+<meta name="description" content="PAR ORDO GO — приложение для клиентов бани: QR-вход, бонусы и история посещений.">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ПАР ОРДО GO">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.webmanifest?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/app-icon-192.png">
 <link rel="preload" as="image" href="assets/bg-banya.jpg">
 <link rel="preload" as="image" href="assets/par-ordo-logo.webp">
 <link rel="preload" as="image" href="assets/door-marble.webp">
@@ -271,6 +274,13 @@ body.noauth nav{display:none}
     <div class="top"><img src="./assets/par-ordo-logo.webp" alt=""><b>ПАР ОРДО</b><span>GO</span><em class="chip">PREVIEW</em></div>
     <h1>Регистрация</h1>
     <p class="sub">Создайте профиль, чтобы копить бонусы и видеть свои посещения</p>
+    <div class="card glass install-panel reg-install-panel" id="installPanelReg">
+      <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
+      <div class="install-actions">
+        <button type="button" class="install-action primary" id="installPwaRegBtn"><span>Установить PWA</span></button>
+        <button type="button" class="install-action" id="apkRegBtn"><span>Скачать APK</span></button>
+      </div>
+    </div>
     <form id="regform" class="glass formcard" novalidate autocomplete="on">
       <div class="field"><span class="lbl">Код страны</span>
         <div class="seg" role="radiogroup" aria-label="Код страны">
@@ -292,15 +302,15 @@ body.noauth nav{display:none}
     <div class="top"><img src="./assets/par-ordo-logo.webp" alt=""><b>ПАР ОРДО</b><span>GO</span></div>
     <p class="sub">Добро пожаловать</p>
     <h1 id="hello">Добро пожаловать</h1>
-    <div class="card glass install-panel" id="installPanel">
-      <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
-      <p class="install-copy">Установите PAR ORDO GO на телефон для быстрого доступа. PWA можно установить из браузера. Android APK будет доступен после отдельной сборки.</p>
-      <div class="install-actions">
-        <button type="button" class="install-action primary" id="installPwaBtn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Установить PWA</span></button>
-        <button type="button" class="install-action" id="apkBtn"><svg class="ic ic-android" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 9h12v9a1.5 1.5 0 0 1-1.5 1.500H15v2.500a1.250 1.250 0 0 1-2.500 0V19.500h-1V22A1.250 1.250 0 0 1 9 22v-2.500H7.500A1.500 1.500 0 0 1 6 18zM3.750 9A1.250 1.250 0 0 1 5 10.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 3.750 9m16.500 0a1.250 1.250 0 0 1 1.250 1.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 20.250 9M6 8a6 6 0 0 1 3.200-5.100l-.9-1.400.8-.5 1 1.500a6.300 6.300 0 0 1 3.800 0l1-1.500.8.5-.9 1.400A6 6 0 0 1 18 8zm3.400-3a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600m5.200 0a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600"/></svg><span>APK · скоро</span></button>
+      <div class="card glass install-panel" id="installPanel">
+        <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
+        <p class="install-copy">Установите PAR ORDO GO на телефон. Выберите PWA для установки из браузера или скачайте Android APK.</p>
+        <div class="install-actions">
+          <button type="button" class="install-action primary" id="installPwaBtn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Установить PWA</span></button>
+          <button type="button" class="install-action" id="apkBtn"><svg class="ic ic-android" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 9h12v9a1.5 1.5 0 0 1-1.5 1.500H15v2.500a1.250 1.250 0 0 1-2.500 0V19.500h-1V22A1.250 1.250 0 0 1 9 22v-2.500H7.500A1.500 1.500 0 0 1 6 18zM3.750 9A1.250 1.250 0 0 1 5 10.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 3.750 9m16.500 0a1.250 1.250 0 0 1 1.250 1.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 20.250 9M6 8a6 6 0 0 1 3.200-5.100l-.9-1.400.8-.5 1 1.500a6.300 6.300 0 0 1 3.800 0l1-1.500.8.5-.9 1.400A6 6 0 0 1 18 8zm3.400-3a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600m5.200 0a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600"/></svg><span>Скачать APK</span></button>
+        </div>
+        <p class="install-foot">Интерфейс адаптируется к частоте обновления экрана. Реальные 120 FPS зависят от дисплея и устройства.</p>
       </div>
-      <p class="install-foot">Интерфейс адаптируется к частоте обновления экрана. Реальные 120 FPS зависят от дисплея и устройства.</p>
-    </div>
     <div id="deckStage" class="deck-stage">
     <div id="deck" role="group" aria-roledescription="карусель" aria-label="Карточки PAR ORDO" tabindex="0">
       <article class="slab glass"><div class="orb"><img src="./assets/par-ordo-logo.webp" alt="ПАР ОРДО" loading="eager" decoding="async"></div><h2>Вход по QR</h2><p class="note">Покажите код администратору, и визит запишется сам.</p><button id="qrbtn"><svg class="ic ic-qr" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.500"/><rect x="14" y="3" width="7" height="7" rx="1.500"/><rect x="3" y="14" width="7" height="7" rx="1.500"/></g><path fill="currentColor" d="M5.500 5.500h2v2h-2zM16.500 5.500h2v2h-2zM5.500 16.500h2v2h-2zM13 13h3.500v3H13zM18 13h3v3h-3zM16 17h3v2h2v2h-5zM13 18h2v3h-2z"/></svg><b>Показать QR</b><span>Обновляется каждые 30 с</span></button></article>
@@ -660,17 +670,69 @@ $('#notifyBtn').onclick=async()=>{
 )();
 
 let installPromptEvent=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPromptEvent=e;});
-$('#installPwaBtn').onclick=async()=>{
+const pwaButtons=[$('#installPwaBtn'),$('#installPwaRegBtn')].filter(Boolean);
+const apkButtons=[$('#apkBtn'),$('#apkRegBtn')].filter(Boolean);
+const isNativeAndroidApp=/PARORDOGO-AndroidApp/i.test(navigator.userAgent);
+const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+const setPwaInstalled=()=>pwaButtons.forEach(button=>{
+  const label=button.querySelector('span');
+  if(label)label.textContent='Приложение установлено';
+  button.disabled=true;
+});
+if(isNativeAndroidApp || isStandalone()){
+  setPwaInstalled();
+  if(isNativeAndroidApp)apkButtons.forEach(button=>{
+    const label=button.querySelector('span');
+    if(label)label.textContent='Приложение открыто';
+    button.disabled=true;
+  });
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  installPromptEvent=e;
+  pwaButtons.forEach(button=>button.disabled=false);
+});
+async function handlePwaInstall(){
+  if(isNativeAndroidApp || isStandalone()){toast('PAR ORDO GO уже установлено на этом устройстве.');return;}
   if(installPromptEvent){
-    installPromptEvent.prompt();
-    try{const choice=await installPromptEvent.userChoice;if(choice&&choice.outcome==='accepted')toast('Установка PAR ORDO GO началась.')}catch(e){}
-    installPromptEvent=null;return;
+    const promptEvent=installPromptEvent;
+    installPromptEvent=null;
+    try{
+      await promptEvent.prompt();
+      const choice=await promptEvent.userChoice;
+      if(choice?.outcome==='accepted')toast('Установка PAR ORDO GO началась.');
+      else toast('Установку можно запустить позже из меню браузера.');
+    }catch(e){toast('Откройте меню браузера и выберите «Установить приложение».');}
+    return;
   }
-  toast('Меню браузера → «Установить приложение» или «Добавить на главный экран».');
-};
-$('#apkBtn').onclick=()=>toast('APK-файл пока не собран. Он появится после отдельной Android-сборки.');
-window.addEventListener('appinstalled',()=>toast('PAR ORDO GO установлен на устройство.'));
+  if(isIOS())toast('Нажмите «Поделиться» → «На экран Домой», чтобы установить PAR ORDO GO.');
+  else toast('Chrome: меню ⋮ → «Установить приложение» или «Добавить на главный экран».');
+}
+pwaButtons.forEach(button=>button.addEventListener('click',handlePwaInstall));
+const APK_RELEASE_API='https://api.github.com/repos/moymarket235/par-ordo-go/releases/latest';
+async function handleApkDownload(button){
+  if(button.disabled)return;
+  const label=button.querySelector('span');
+  const previous=label?.textContent;
+  button.disabled=true;
+  if(label)label.textContent='Проверяем APK…';
+  try{
+    const response=await fetch(APK_RELEASE_API,{headers:{Accept:'application/vnd.github+json'}});
+    if(!response.ok)throw new Error('release-not-found');
+    const release=await response.json();
+    const asset=(release.assets||[]).find(item=>item.name==='par-ordo-go.apk' && item.browser_download_url);
+    if(!asset)throw new Error('apk-not-found');
+    window.location.href=asset.browser_download_url;
+  }catch(e){
+    toast('APK пока не опубликован. Сначала запустите Android-сборку в GitHub Actions.');
+  }finally{
+    button.disabled=false;
+    if(label)label.textContent=previous||'Скачать APK';
+  }
+}
+apkButtons.forEach(button=>button.addEventListener('click',()=>handleApkDownload(button)));
+window.addEventListener('appinstalled',()=>{setPwaInstalled();toast('PAR ORDO GO установлен на устройство.');});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 <script src="./smart-invitation-v1.js?v=2"></script>
