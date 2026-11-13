@@ -157,6 +157,9 @@ body::before{background:linear-gradient(180deg,rgba(10,8,7,.7),rgba(10,8,7,.18) 
 .found b{display:block;color:#9be8b4;margin-bottom:2px}
 .found.maybe{border-color:rgba(240,185,90,.5);background:rgba(240,185,90,.13)}
 .found.maybe b{color:var(--gold)}
+.auth-result{border-radius:14px;padding:13px 14px;font-size:14px;line-height:1.5;border:1px solid rgba(240,185,90,.48);background:rgba(240,185,90,.12);color:var(--ink);overflow-wrap:anywhere}
+.auth-result.success{border-color:rgba(120,220,150,.45);background:rgba(40,120,70,.22)}
+.auth-result.error{border-color:rgba(255,130,120,.5);background:rgba(150,48,40,.18)}
 .cta{min-height:54px;border-radius:16px;background:linear-gradient(135deg,#f0c56d,var(--ember));color:#1a1206;font:700 17px Georgia,serif;box-shadow:0 14px 36px -14px rgba(255,138,61,.8)}
 .cta:disabled{opacity:.55}
 .linkbtn{display:block;margin:6px auto 0;color:var(--mist);opacity:.7;font-size:13.5px;padding:10px;text-decoration:underline}
@@ -186,6 +189,8 @@ body.noauth nav{display:none}
 .install-action{min-height:44px;border-radius:13px;padding:9px 7px;border:1px solid var(--line);font-weight:700;font-size:11px;line-height:1.2;background:rgba(10,7,4,.45);width:100%}
 .install-action.primary{background:linear-gradient(135deg,#f0c56d,var(--ember));color:#1a1206;border:0}
 .install-action:disabled{opacity:.55;cursor:not-allowed}
+.install-action.soon{opacity:.78;border-style:dashed;border-color:rgba(240,197,109,.48);color:var(--gold);background:rgba(10,7,4,.32);cursor:default}
+.install-action.soon span{white-space:normal}
 .support-card{padding:18px;margin:14px 0}
 .support-card p{font-size:13px;line-height:1.5;color:var(--mist);opacity:.9}
 .profile-kv{display:grid;gap:10px;margin-top:14px}
@@ -272,13 +277,13 @@ body.noauth nav{display:none}
 <main>
   <section id="reg" hidden>
     <div class="top"><img src="./assets/par-ordo-logo.webp" alt=""><b>ПАР ОРДО</b><span>GO</span><em class="chip">PREVIEW</em></div>
-    <h1>Регистрация</h1>
-    <p class="sub">Создайте профиль, чтобы копить бонусы и видеть свои посещения</p>
+    <h1 id="authTitle">Регистрация</h1>
+    <p class="sub" id="authSub">Введите номер телефона — проверим его в Базе клиентов ПАР ОРДО</p>
     <div class="card glass install-panel reg-install-panel" id="installPanelReg">
       <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
       <div class="install-actions">
         <button type="button" class="install-action primary" id="installPwaRegBtn"><span>Установить PWA</span></button>
-        <button type="button" class="install-action" id="apkRegBtn"><span>Скачать APK</span></button>
+        <button type="button" class="install-action soon" id="apkRegBtn" disabled aria-disabled="true"><span>APK версия — СКОРО</span></button>
       </div>
     </div>
     <form id="regform" class="glass formcard" novalidate autocomplete="on">
@@ -291,10 +296,13 @@ body.noauth nav{display:none}
         <div class="phone"><span id="pre">+996</span><input id="ph" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="555 123 456"></div>
         <p class="hint err" id="phh"></p></div>
       <div id="found" class="found" role="status" hidden></div>
-      <div class="field"><label class="lbl" for="fn">Имя</label><input id="fn" autocomplete="given-name" placeholder="Например, Айбек"><p class="hint err" id="fnh"></p></div>
-      <div class="field"><label class="lbl" for="ln">Фамилия</label><input id="ln" autocomplete="family-name" placeholder="Например, Нурланов"><p class="hint err" id="lnh"></p></div>
-      <div class="field"><label class="lbl" for="mn">Отчество <i>необязательно</i></label><input id="mn" autocomplete="additional-name" placeholder="Например, Эркинович"></div>
-      <button type="submit" class="cta" id="regbtn">Продолжить</button>
+      <div id="authResult" class="auth-result" role="status" aria-live="polite" hidden></div>
+      <div id="registrationFields" hidden>
+        <div class="field"><label class="lbl" for="fn">Имя</label><input id="fn" autocomplete="given-name" placeholder="Например, Айбек"><p class="hint err" id="fnh"></p></div>
+        <div class="field"><label class="lbl" for="ln">Фамилия</label><input id="ln" autocomplete="family-name" placeholder="Например, Нурланов"><p class="hint err" id="lnh"></p></div>
+        <div class="field"><label class="lbl" for="mn">Отчество <i>необязательно</i></label><input id="mn" autocomplete="additional-name" placeholder="Например, Эркинович"></div>
+      </div>
+      <button type="submit" class="cta" id="regbtn" disabled>Проверить номер</button>
     </form>
   </section>
 
@@ -304,10 +312,10 @@ body.noauth nav{display:none}
     <h1 id="hello">Добро пожаловать</h1>
       <div class="card glass install-panel" id="installPanel">
         <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
-        <p class="install-copy">Установите PAR ORDO GO на телефон. Выберите PWA для установки из браузера или скачайте Android APK.</p>
+        <p class="install-copy">Установите PAR ORDO GO на телефон через PWA. Android APK версия готовится к запуску.</p>
         <div class="install-actions">
           <button type="button" class="install-action primary" id="installPwaBtn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Установить PWA</span></button>
-          <button type="button" class="install-action" id="apkBtn"><svg class="ic ic-android" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 9h12v9a1.5 1.5 0 0 1-1.5 1.500H15v2.500a1.250 1.250 0 0 1-2.500 0V19.500h-1V22A1.250 1.250 0 0 1 9 22v-2.500H7.500A1.500 1.500 0 0 1 6 18zM3.750 9A1.250 1.250 0 0 1 5 10.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 3.750 9m16.500 0a1.250 1.250 0 0 1 1.250 1.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 20.250 9M6 8a6 6 0 0 1 3.200-5.100l-.9-1.400.8-.5 1 1.500a6.300 6.300 0 0 1 3.800 0l1-1.500.8.5-.9 1.400A6 6 0 0 1 18 8zm3.400-3a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600m5.200 0a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600"/></svg><span>Скачать APK</span></button>
+          <button type="button" class="install-action soon" id="apkBtn" disabled aria-disabled="true"><svg class="ic ic-android" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 9h12v9a1.5 1.5 0 0 1-1.5 1.500H15v2.500a1.250 1.250 0 0 1-2.500 0V19.500h-1V22A1.250 1.250 0 0 1 9 22v-2.500H7.500A1.500 1.500 0 0 1 6 18zM3.750 9A1.250 1.250 0 0 1 5 10.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 3.750 9m16.500 0a1.250 1.250 0 0 1 1.250 1.250v5.500a1.250 1.250 0 0 1-2.500 0v-5.500A1.250 1.250 0 0 1 20.250 9M6 8a6 6 0 0 1 3.200-5.100l-.9-1.400.8-.5 1 1.500a6.300 6.300 0 0 1 3.800 0l1-1.500.8.5-.9 1.400A6 6 0 0 1 18 8zm3.400-3a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600m5.200 0a.8.800 0 1 0 0 1.600.8.800 0 0 0 0-1.600"/></svg><span>APK версия — СКОРО</span></button>
         </div>
         <p class="install-foot">Интерфейс адаптируется к частоте обновления экрана. Реальные 120 FPS зависят от дисплея и устройства.</p>
       </div>
@@ -561,8 +569,14 @@ const API_URL='https://par-ordo-api.moimarketjibekjolu.workers.dev';
 const DEMO_BASE=[]; /* Реальные клиенты будут проверяться через Worker API. */
 const maskPhone=p=>{const cc=p.startsWith('+996')?'+996':'+7',n=p.slice(cc.length);return cc+' '+n.slice(0,3)+' ••• '+n.slice(-3)};
 async function lookup(q){
-  try{const r=await fetch(API_URL+'/api/go/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});if(r.ok)return await r.json();}catch(e){}
-  return{match:null,inBase:false};
+  try{
+    const r=await fetch(API_URL+'/api/go/lookup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});
+    if(!r.ok)throw new Error('lookup-'+r.status);
+    const data=await r.json();
+    return {...data,checked:true};
+  }catch(e){
+    return{match:null,inBase:false,checked:false};
+  }
 }
 const goUser=()=>LS.get('po_go_user');
 async function goApi(path,options={}){
@@ -584,7 +598,7 @@ function renderProfile(u){
 }
 
 const cap=t=>t.trim().replace(/\s+/g,' ').replace(/^\p{L}/u,c=>c.toUpperCase());
-let CC='996',CUSTOMER=null,AUTO=false,seq=0,nameT=0;
+let CC='996',CUSTOMER=null,AUTO=false,seq=0,nameT=0,AUTH_MODE='checking';
 const LEN={996:9,7:10},PH={996:'555 123 456',7:'900 123 45 67'};
 const digits=v=>{let d=v.replace(/\D/g,'');
   if(CC==='996'){if(d.length>=12&&d.startsWith('996'))d=d.slice(3);if(d.length===10&&d[0]==='0')d=d.slice(1)}
@@ -594,45 +608,88 @@ const fmt=d=>(CC==='996'?[d.slice(0,3),d.slice(3,6),d.slice(6,9)]:[d.slice(0,3),
 const showFound=(html,maybe)=>{const f=$('#found');f.className='found'+(maybe?' maybe':'');f.innerHTML=html;f.hidden=false};
 const hideFound=()=>{$('#found').hidden=true};
 const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3600)};
+function setAuthMode(mode,message=''){
+  AUTH_MODE=mode;
+  const note=$('#authResult'),fields=$('#registrationFields'),button=$('#regbtn');
+  const title=$('#authTitle'),sub=$('#authSub');
+  if(title)title.textContent=mode==='login'?'Вход':'Регистрация';
+  if(sub)sub.textContent=mode==='login'?'Войдите в существующий аккаунт PAR ORDO GO': 'Номер телефона будет сверяться с Базой клиентов PAR ORDO PRO';
+  if(note){note.textContent=message;note.hidden=!message;note.className='auth-result'+(mode==='login'?' success':(mode==='unavailable'||mode==='not-found'?' error':''));}
+  if(fields)fields.hidden=true;
+  if(button){
+    button.disabled=mode!=='login';
+    button.textContent=mode==='login'?'Войти':mode==='not-found'?'Регистрация':mode==='unavailable'?'Проверить позже':'Проверить номер';
+  }
+}
+setAuthMode('checking','Введите номер телефона — проверим его в Базе клиентов.');
 function clearAuto(){if(AUTO){$('#fn').value=$('#ln').value=$('#mn').value='';AUTO=false}CUSTOMER=null;hideFound()}
 
 document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
   CC=b.dataset.cc;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-checked',x===b));
-  $('#pre').textContent='+'+CC;$('#ph').placeholder=PH[CC];$('#ph').value='';$('#phh').textContent='';clearAuto()});
+  $('#pre').textContent='+'+CC;$('#ph').placeholder=PH[CC];$('#ph').value='';$('#phh').textContent='';clearAuto();setAuthMode('checking','Введите полный номер телефона для проверки в Базе клиентов.');});
 
 $('#ph').addEventListener('input',async()=>{
   const ph=$('#ph'),d=digits(ph.value);ph.value=fmt(d);$('#phh').textContent='';
-  if(d.length<LEN[CC]){clearAuto();return}
-  const my=++seq,res=await lookup({phone:'+'+CC+d});
+  const my=++seq;
+  clearAuto();
+  if(d.length<LEN[CC]){setAuthMode('checking',d.length?'Продолжите ввод номера телефона.':'Введите номер телефона — проверим его в Базе клиентов.');return}
+  setAuthMode('checking','Проверяем номер в Базе клиентов ПАР ОРДО…');
+  const phone='+'+CC+d,res=await lookup({phone});
   if(my!==seq)return;
+  if(!res.checked){
+    setAuthMode('unavailable','Не удалось проверить Базу клиентов. Проверьте интернет и попробуйте ещё раз. Номер не считается отсутствующим в базе, пока проверка не прошла.');
+    return;
+  }
   if(res.inBase){
-    CUSTOMER={inBase:true};AUTO=false;
-    showFound('<b>Номер найден в Базе клиентов ПАР ОРДО</b>После регистрации история посещений и покупок будет связана с этим номером.');
-  }else clearAuto();
+    CUSTOMER={inBase:true,phone,match:res.match||null};AUTO=false;
+    showFound('<b>Номер найден в Базе клиентов ПАР ОРДО</b>Доступен вход в PAR ORDO GO.');
+    setAuthMode('login','Номер найден. Нажмите «Войти». На новом устройстве потребуется предварительное подтверждение привязки сотрудником PAR ORDO PRO. SMS-код не используется.');
+  }else{
+    CUSTOMER=null;
+    setAuthMode('not-found','Номер не найден в Базе клиентов. Сначала попросите сотрудника PAR ORDO PRO добавить этот номер в Базу клиентов. После добавления повторите проверку — тогда появится вход.');
+  }
 });
 
 function nameCheck(){clearTimeout(nameT);if(!CUSTOMER)hideFound();}
 ['#fn','#ln'].forEach(i=>$(i).addEventListener('input',()=>{AUTO=false;$(i+'h').textContent='';nameCheck()}));
 
+function getDeviceId(){
+  let id=LS.get('po_go_device_id');
+  if(!id){id=(crypto&&crypto.randomUUID)?crypto.randomUUID():('po-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));LS.set('po_go_device_id',id)}
+  return id;
+}
 $('#regform').addEventListener('submit',async e=>{
   e.preventDefault();
-  const d=digits($('#ph').value),fn=cap($('#fn').value),ln=cap($('#ln').value),mn=cap($('#mn').value);
-  const okName=v=>v.length>=2&&/^[\p{L}\s'\-.]+$/u.test(v);
-  let bad=false;
-  if(d.length!==LEN[CC]){$('#phh').textContent='Введите номер полностью: '+LEN[CC]+' цифр';bad=true}
-  if(!okName(fn)){$('#fnh').textContent='Укажите имя (только буквы)';bad=true}
-  if(!okName(ln)){$('#lnh').textContent='Укажите фамилию (только буквы)';bad=true}
-  if(bad){const f=document.querySelector('.hint.err:not(:empty)');if(f)f.scrollIntoView({block:'center',behavior:'smooth'});return}
+  const d=digits($('#ph').value);
+  if(d.length!==LEN[CC]){setAuthMode('checking','Введите полный номер телефона.');return}
   const phone='+'+CC+d,existing=LS.get('po_go_user');
-  if(existing?.token&&existing.phone===phone){enterApp(existing,false);toast('Аккаунт уже зарегистрирован.');return}
-  const button=$('#regbtn');button.disabled=true;button.textContent='Подключение…';
+  if(AUTH_MODE!=='login'||!CUSTOMER?.inBase||CUSTOMER.phone!==phone){
+    toast(AUTH_MODE==='not-found'?'Сначала добавьте номер в Базу клиентов PAR ORDO PRO.':'Сначала проверьте номер в Базе клиентов.');
+    return;
+  }
+  if(existing?.token&&existing.phone===phone){enterApp(existing,false);toast('Вы вошли в свой PAR ORDO GO.');return}
+  const button=$('#regbtn'),note=$('#authResult');
+  button.disabled=true;button.textContent='Проверяем доступ…';
   try{
-    const r=await fetch(API_URL+'/api/go/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,first:fn,last:ln,middle:mn})});
-    let data=null;try{data=await r.json()}catch(e){}if(!r.ok)throw new Error(data?.error||('Worker API '+r.status));
-    const u={id:data.account.id,token:data.token,phone,first:data.account.first,last:data.account.last,mid:data.account.middle||'',inBase:Boolean(data.account.inBase)};
-    LS.set('po_go_user',u);enterApp(u,true);toast('Каттоо ийгиликтүү. Биринчи визитте кызматкер База клиентов менен байланыштырат.');
-  }catch(error){toast(error.message||'Каттоо ишке ашкан жок.');$('#phh').textContent=error.message||'Каттоо ишке ашкан жок.'}
-  finally{button.disabled=false;button.textContent='Продолжить'}
+    const r=await fetch(API_URL+'/api/go/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,deviceId:getDeviceId()})});
+    let data=null;try{data=await r.json()}catch(e){}
+    if(r.status===403||data?.code==='device_approval_required'){
+      setAuthMode('login','Номер табылды, бирок бул жаңы түзмөк азырынча бекитиле элек. PAR ORDO PRO кызматкеринен ушул түзмөктү ырастоону сураныңыз. Ырастоодон кийин кайра «Войти» басыңыз.');
+      return;
+    }
+    if(r.status===404){
+      setAuthMode('login','Номер База клиентовден табылды. Бирок серверде жаңы түзмөккө кирүү API азырынча кошула элек. PAR ORDO PRO кызматкеринен түзмөктү ырастоону сураныңыз; Worker жаңыртылгандан кийин бул баскыч иштейт.');
+      return;
+    }
+    if(!r.ok)throw new Error(data?.error||('Worker API '+r.status));
+    if(!data?.token||!data?.account?.id)throw new Error('Сервер толук кирүү сессиясын кайтарган жок.');
+    const u={id:data.account.id,token:data.token,phone,first:data.account.first||'',last:data.account.last||'',mid:data.account.middle||'',inBase:true,verified:Boolean(data.account.verified)};
+    LS.set('po_go_user',u);enterApp(u,false);toast('Вход выполнен. Добро пожаловать!');
+  }catch(error){
+    setAuthMode('login','Не удалось выполнить вход: '+(error.message||'ошибка сервера')+'. Попробуйте позже или обратитесь к сотруднику.');
+  }finally{
+    if(AUTH_MODE==='login'){button.disabled=false;button.textContent='Войти'}
+  }
 });
 
 function enterApp(u,fresh){
@@ -671,7 +728,6 @@ $('#notifyBtn').onclick=async()=>{
 
 let installPromptEvent=null;
 const pwaButtons=[$('#installPwaBtn'),$('#installPwaRegBtn')].filter(Boolean);
-const apkButtons=[$('#apkBtn'),$('#apkRegBtn')].filter(Boolean);
 const isNativeAndroidApp=/PARORDOGO-AndroidApp/i.test(navigator.userAgent);
 const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -682,11 +738,6 @@ const setPwaInstalled=()=>pwaButtons.forEach(button=>{
 });
 if(isNativeAndroidApp || isStandalone()){
   setPwaInstalled();
-  if(isNativeAndroidApp)apkButtons.forEach(button=>{
-    const label=button.querySelector('span');
-    if(label)label.textContent='Приложение открыто';
-    button.disabled=true;
-  });
 }
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
@@ -710,28 +761,6 @@ async function handlePwaInstall(){
   else toast('Chrome: меню ⋮ → «Установить приложение» или «Добавить на главный экран».');
 }
 pwaButtons.forEach(button=>button.addEventListener('click',handlePwaInstall));
-const APK_RELEASE_API='https://api.github.com/repos/moymarket235/par-ordo-go/releases/latest';
-async function handleApkDownload(button){
-  if(button.disabled)return;
-  const label=button.querySelector('span');
-  const previous=label?.textContent;
-  button.disabled=true;
-  if(label)label.textContent='Проверяем APK…';
-  try{
-    const response=await fetch(APK_RELEASE_API,{headers:{Accept:'application/vnd.github+json'}});
-    if(!response.ok)throw new Error('release-not-found');
-    const release=await response.json();
-    const asset=(release.assets||[]).find(item=>item.name==='par-ordo-go.apk' && item.browser_download_url);
-    if(!asset)throw new Error('apk-not-found');
-    window.location.href=asset.browser_download_url;
-  }catch(e){
-    toast('APK пока не опубликован. Сначала запустите Android-сборку в GitHub Actions.');
-  }finally{
-    button.disabled=false;
-    if(label)label.textContent=previous||'Скачать APK';
-  }
-}
-apkButtons.forEach(button=>button.addEventListener('click',()=>handleApkDownload(button)));
 window.addEventListener('appinstalled',()=>{setPwaInstalled();toast('PAR ORDO GO установлен на устройство.');});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
