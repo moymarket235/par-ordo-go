@@ -1,4 +1,4 @@
-const CACHE='po-go-v23';
+const CACHE='po-go-v24';
 const SHELL=['./','./index.html','./manifest.webmanifest','./assets/app-icon-192.png','./assets/par-ordo-logo.png','./assets/par-ordo-logo.webp','./assets/bg-banya.jpg','./assets/ornament-corner.svg','./assets/ribbons.svg','./assets/door-marble.webp','./par-ordo-go-door-v1.css','./par-ordo-go-door-v1.js'];
 async function cacheOk(cache,request,response){
   if(response && response.ok && response.type!=='opaque'){
