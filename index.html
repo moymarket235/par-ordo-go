@@ -271,6 +271,18 @@ body.noauth nav{display:none}
 .install-panel .install-action.installed .ic{color:#d7edb7!important}
 @media(max-width:360px){.install-panel .install-action{min-height:44px!important;padding:7px 5px!important;font-size:10px!important;gap:5px!important}.install-panel .install-action .ic{width:18px!important;height:18px!important;flex-basis:18px!important}}
 </style>
+<style id="go-contact-staff-v1">
+/* Номер не найден в Базе клиентов → регистрация через сотрудника бани, телефон +996 707 292 292 */
+.auth-contact{display:grid;gap:8px;min-width:0;border-radius:14px;padding:14px;border:1px solid rgba(240,185,90,.5);background:rgba(240,185,90,.12);color:var(--ink);font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.auth-contact[hidden]{display:none}
+.auth-contact b{display:block;color:#ffb3a5;font-size:14.5px;line-height:1.35}
+.auth-contact p{margin:0}
+.auth-contact .auth-contact-ru{font-size:13px;opacity:.82}
+.auth-call{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;margin-top:4px;padding:8px 14px;border-radius:14px;border:1px solid rgba(255,214,160,.6);background:rgba(10,7,4,.6);color:var(--gold);font:800 clamp(17px,5vw,20px)/1.1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.02em;font-variant-numeric:tabular-nums;text-decoration:none;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.auth-call svg{width:20px;height:20px;flex:0 0 20px}
+.auth-call:active{transform:scale(.98)}
+.auth-call:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+</style>
 
 </head>
 <body>
@@ -287,8 +299,8 @@ body.noauth nav{display:none}
 <main>
   <section id="reg" hidden>
     <div class="top"><img src="./assets/par-ordo-logo.webp" alt=""><b>ПАР ОРДО</b><span>GO</span><em class="chip">PREVIEW</em></div>
-    <h1 id="authTitle">Регистрация</h1>
-    <p class="sub" id="authSub">Введите номер телефона — проверим его в Базе клиентов ПАР ОРДО</p>
+    <h1 id="authTitle">Вход</h1>
+    <p class="sub" id="authSub">Войдите по номеру телефона из Базы клиентов ПАР ОРДО</p>
     <div class="card glass install-panel reg-install-panel" id="installPanelReg">
       <div class="install-head"><h2>Установить приложение</h2><span class="install-tag">PAR ORDO GO</span></div>
       <div class="install-actions">
@@ -307,12 +319,18 @@ body.noauth nav{display:none}
         <p class="hint err" id="phh"></p></div>
       <div id="found" class="found" role="status" hidden></div>
       <div id="authResult" class="auth-result" role="status" aria-live="polite" hidden></div>
+      <div id="authContact" class="auth-contact" role="status" aria-live="polite" hidden>
+        <b>Номер не найден в Базе клиентов</b>
+        <p>Катталуу үчүн Пар Ордо банясынын кызматкерине байланышыңыз.</p>
+        <p class="auth-contact-ru">Для регистрации свяжитесь с сотрудником бани «Пар Ордо».</p>
+        <a class="auth-call" href="tel:+996707292292" aria-label="Позвонить сотруднику бани «Пар Ордо»: +996 707 292 292"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg><span>+996 707 292 292</span></a>
+      </div>
       <div id="registrationFields" hidden>
         <div class="field"><label class="lbl" for="fn">Имя</label><input id="fn" autocomplete="given-name" placeholder="Например, Айбек"><p class="hint err" id="fnh"></p></div>
         <div class="field"><label class="lbl" for="ln">Фамилия</label><input id="ln" autocomplete="family-name" placeholder="Например, Нурланов"><p class="hint err" id="lnh"></p></div>
         <div class="field"><label class="lbl" for="mn">Отчество <i>необязательно</i></label><input id="mn" autocomplete="additional-name" placeholder="Например, Эркинович"></div>
       </div>
-      <button type="submit" class="cta" id="regbtn" disabled>Проверить номер</button>
+      <button type="submit" class="cta" id="regbtn" disabled>Войти</button>
     </form>
   </section>
 
@@ -622,13 +640,14 @@ function setAuthMode(mode,message=''){
   AUTH_MODE=mode;
   const note=$('#authResult'),fields=$('#registrationFields'),button=$('#regbtn');
   const title=$('#authTitle'),sub=$('#authSub');
-  if(title)title.textContent=mode==='login'?'Вход':'Регистрация';
-  if(sub)sub.textContent=mode==='login'?'Войдите в существующий аккаунт PAR ORDO GO': 'Номер телефона будет сверяться с Базой клиентов PAR ORDO PRO';
+  if(title)title.textContent='Вход';
+  if(sub)sub.textContent='Войдите по номеру телефона из Базы клиентов ПАР ОРДО';
+  const contact=$('#authContact');if(contact)contact.hidden=mode!=='not-found';
   if(note){note.textContent=message;note.hidden=!message;note.className='auth-result'+(mode==='login'?' success':(mode==='unavailable'||mode==='not-found'?' error':''));}
   if(fields)fields.hidden=true;
   if(button){
-    button.disabled=mode!=='login';
-    button.textContent=mode==='login'?'Войти':mode==='not-found'?'Регистрация':mode==='unavailable'?'Проверить позже':'Проверить номер';
+    button.disabled=!(mode==='login'||mode==='unavailable');
+    button.textContent='Войти';
   }
 }
 setAuthMode('checking','Введите номер телефона — проверим его в Базе клиентов.');
@@ -647,16 +666,16 @@ $('#ph').addEventListener('input',async()=>{
   const phone='+'+CC+d,res=await lookup({phone});
   if(my!==seq)return;
   if(!res.checked){
-    setAuthMode('unavailable','Не удалось проверить Базу клиентов. Проверьте интернет и попробуйте ещё раз. Номер не считается отсутствующим в базе, пока проверка не прошла.');
+    setAuthMode('unavailable','Не удалось проверить Базу клиентов. Проверьте интернет и нажмите «Войти» ещё раз.');
     return;
   }
   if(res.inBase){
     CUSTOMER={inBase:true,phone,match:res.match||null};AUTO=false;
-    showFound('<b>Номер найден в Базе клиентов ПАР ОРДО</b>Доступен вход в PAR ORDO GO.');
-    setAuthMode('login','Номер найден. Нажмите «Войти». На новом устройстве потребуется предварительное подтверждение привязки сотрудником PAR ORDO PRO. SMS-код не используется.');
+    showFound('<b>Номер найден в Базе клиентов ПАР ОРДО</b>Нажмите «Войти».');
+    setAuthMode('login','');
   }else{
     CUSTOMER=null;
-    setAuthMode('not-found','Номер не найден в Базе клиентов. Сначала попросите сотрудника PAR ORDO PRO добавить этот номер в Базу клиентов. После добавления повторите проверку — тогда появится вход.');
+    setAuthMode('not-found','');
   }
 });
 
@@ -672,9 +691,10 @@ $('#regform').addEventListener('submit',async e=>{
   e.preventDefault();
   const d=digits($('#ph').value);
   if(d.length!==LEN[CC]){setAuthMode('checking','Введите полный номер телефона.');return}
+  if(AUTH_MODE==='unavailable'){$('#ph').dispatchEvent(new Event('input'));return}
   const phone='+'+CC+d,existing=LS.get('po_go_user');
   if(AUTH_MODE!=='login'||!CUSTOMER?.inBase||CUSTOMER.phone!==phone){
-    toast(AUTH_MODE==='not-found'?'Сначала добавьте номер в Базу клиентов PAR ORDO PRO.':'Сначала проверьте номер в Базе клиентов.');
+    toast(AUTH_MODE==='not-found'?'Для регистрации свяжитесь с сотрудником бани «Пар Ордо»: +996 707 292 292':'Сначала проверьте номер в Базе клиентов.');
     return;
   }
   if(existing?.token&&existing.phone===phone){enterApp(existing,false);toast('Вы вошли в свой PAR ORDO GO.');return}
